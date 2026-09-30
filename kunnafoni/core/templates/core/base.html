@@ -1,0 +1,33 @@
+<!-- core/templates/core/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kunnafoni{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
+</head>
+<body>
+    <div class="conteneur">
+        <header>
+            <nav>
+        
+                <strong>Kunnafoni</strong>
+            </nav>
+        </header>
+
+        <main>
+            {% block content %}
+            
+            {% endblock %}
+        </main>
+
+        <footer>
+            <p style="color: var(--discret); font-size: 14px; text-align: center; margin-top: var(--l);">
+                &copy; 2026 Kunnafoni - Projet de fin de stage
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

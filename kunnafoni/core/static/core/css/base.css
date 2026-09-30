@@ -1,0 +1,66 @@
+/* core/static/core/css/base.css */
+
+:root {
+    /* Couleurs réglementaires imposées (Page 7) */
+    --fond: #FAF9F7;
+    --surface: #FFFFFF;
+    --texte: #23252B;
+    --accent: #7A4E7E;      /* Liens et boutons principaux */
+    --attention: #B14B3F;   /* Messages d'invitation à consulter un médecin */
+    --discret: #6C7079;     /* Dates, sources et mentions en bas de page */
+
+    /* Espacements standardisés multiples de 8 (Page 7) */
+    --xs: 8px; 
+    --s: 16px; 
+    --m: 24px; 
+    --l: 40px;
+    --rayon: 8px;
+    --ombre: 0 1px 3px rgba(35, 37, 43, 0.12);
+}
+
+/* Règles d'accessibilité mobile impératives (Page 8) */
+body {
+    background-color: var(--fond);
+    color: var(--texte);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: var(--s);
+    font-size: 18px;          /* Texte à 18px minimum pour lecture sur téléphone (Pas 14px) */
+    line-height: 1.6;         /* Hauteur de ligne généreuse pour un texte de santé */
+}
+
+/* Lignes de moins de 70 caractères pour faciliter la lecture lente (Page 8) */
+p, li, h1, h2, h3 {
+    max-width: 65ch;
+}
+
+/* Style de base des conteneurs pour éviter tout débordement horizontal sur écran mobile (Page 8) */
+.conteneur {
+    width: 100%;
+    max-width: 480px;         /* Largeur idéale pour un affichage sur smartphone */
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Les boutons et liens doivent être facilement cliquables au doigt */
+.btn-principal {
+    display: inline-block;
+    background-color: var(--accent);
+    color: var(--surface);
+    padding: var(--s) var(--m);
+    border-radius: var(--rayon);
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+/* Message de recommandation médicale (Couleur attention, calme, pas rouge vif) (Page 8) */
+.alerte-medicale {
+    background-color: #FDF2F0; /* Version très claire du fond d'attention */
+    border-left: 4px solid var(--attention);
+    padding: var(--s);
+    margin: var(--m) 0;
+    border-radius: 0 var(--rayon) var(--rayon) 0;
+}
