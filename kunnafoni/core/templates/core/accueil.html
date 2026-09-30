@@ -1,0 +1,82 @@
+<!-- core/templates/core/accueil.html -->
+{% extends 'core/base.html' %}
+
+{% load static %} 
+{% block title %}Accueil - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <!-- Message de bienvenue personnalisé -->
+    <h2 style="margin-bottom: var(--xs);">Bonjour, {{ request.user.username }} 👋</h2>
+    <p style="color: var(--discret); font-size: 16px; margin-top: 0;">
+        Profil : <strong>{{ request.user.profil.get_role_display }}</strong>
+        {% if request.user.profil.structure %}
+            at {{ request.user.profil.structure }}
+        {% endif %}
+    </p>
+
+    <!-- INTERFACE DESTINÉ AUX UTILISATRICES (Grand public) -->
+    
+    {% if request.user.profil.role == "UTILISATRICE" %}
+        
+        <!-- Avertissement médical -->
+    <div class="alerte-medicale" style="margin-bottom: var(--m); display: flex; align-items: flex-start; gap: var(--xs);">
+         <!-- Inclusion de l'icône SVG stockée en local dans le dossier static -->
+         <img src="{% static 'core/images/shield-alert.svg' %}" alt="Alerte" style="width: 24px; height: 24px; flex-shrink: 0; margin-top: 2px;">
+    
+         <div>
+             <small style="color: var(--attention); font-weight: bold; display: block; margin-bottom: 4px;">⚠️ RAPPEL DE SÉCURITÉ :</small>
+             <p style="margin: 0; font-size: 16px; line-height: 1.4;">
+                 Kunnafoni n'émet aucun diagnostic. En cas de doute ou de symptôme inhabituel, consultez immédiatement un médecin.
+             </p>
+         </div>
+   </div>
+
+        <div style="display: grid; gap: var(--s); margin-top: var(--m);">
+            
+            <!-- Bloc Portail d'Information -->
+            <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
+                <h3 style="margin-top: 0; color: var(--accent);">📚 S'informer</h3>
+                <p style="font-size: 16px; color: var(--texte);">Consultez les méthodes préventives officielles et les signes d'alerte validés par les autorités de santé.</p>
+                <a href="{% url 'infos' %}" class="btn-principal" style="display: block; text-align: center;">Accéder au portail</a>
+            </div>
+
+            <!-- Bloc Carnet de Suivi Intime -->
+            <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
+                <h3 style="margin-top: 0; color: var(--accent);">📅 Carnet de Palpation</h3>
+                <p style="font-size: 16px; color: var(--texte);">Enregistrez vos observations mensuelles et suivez la régularité de vos examens en toute confidentialité.</p>
+                <!-- Le lien vers le carnet sera activé au Jour 3 -->
+                <button class="btn-principal" style="width: 100%; background-color: var(--discret); cursor: not-allowed;" disabled>
+                    Mon carnet (Bientôt disponible)
+                </button>
+            </div>
+
+        </div>
+
+    <!-- INTERFACE DESTINÉE AUX FOURNISSEURS DE DONNÉES -->
+    {% elif request.user.profil.role == "FOURNISSEUR" %}
+        
+        <div style="background: #F0F4F8; border-left: 4px solid var(--accent); padding: var(--s); margin-bottom: var(--m); border-radius: 0 var(--rayon) var(--rayon) 0;">
+            <p style="margin: 0; font-size: 16px; color: var(--texte);">
+                Espace professionnel réservé à la publication et au relais des campagnes de santé publique pour La lutte contre le <strong>cancer du sein</strong>.
+            </p>
+        </div>
+
+        <div style="display: grid; gap: var(--s); margin-top: var(--m);">
+            
+            <!-- Outil de publication de campagne -->
+            <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
+                <h3 style="margin-top: 0; color: var(--accent);">📢 Campagnes de Dépistage</h3>
+                <p style="font-size: 16px; color: var(--texte);">Publiez une nouvelle campagne de dépistage gratuit en joignant votre communiqué officiel signé (PDF/Image).</p>
+                
+                <!-- Lien vers le formulaire de dépôt (Critère d'acceptation F1 à tester) -->
+                <a href="{% url 'publier_campagne' %}" class="btn-principal" style="display: block; text-align: center;">
+                    Publier un communiqué
+                </a>
+            </div>
+
+        </div>
+
+    {% endif %}
+</div>
+{% endblock %}

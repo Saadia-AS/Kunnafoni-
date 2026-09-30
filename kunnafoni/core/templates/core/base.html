@@ -11,9 +11,23 @@
 <body>
     <div class="conteneur">
         <header>
-            <nav>
-        
-                <strong>Kunnafoni</strong>
+            <nav style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="{% url 'accueil' %}" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 20px;">
+                    Kunnafoni
+                </a>
+                
+                <div>
+                    {% if request.user.is_authenticated %}
+                        <!-- Menu visible uniquement si connecté (Page 2) -->
+                        <a href="{% url 'infos' %}" style="color: var(--texte); text-decoration: none; margin-right: var(--s); font-size: 16px;">🔍 Infos</a>
+                        
+                        <!-- Bouton Déconnexion discret mais accessible -->
+                        <a href="{% url 'deconnexion' %}" style="color: var(--attention); text-decoration: none; font-size: 16px; font-weight: bold;">❌ Quitter</a>
+                    {% else %}
+                        <!-- Liens visibles si visiteur anonyme -->
+                        <a href="{% url 'connexion' %}" style="color: var(--accent); text-decoration: none; font-size: 16px;">Connexion</a>
+                    {% endif %}
+                </div>
             </nav>
         </header>
 

@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Connexion - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <h2>Se connecter</h2>
+
+    <form method="post" style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+            <p style="color: var(--attention); font-weight: bold;">Identifiants incorrects. Veuillez réessayer.</p>
+        {% endif %}
+
+        <div style="margin-bottom: var(--s);">
+            <label style="display: block; font-weight: bold; margin-bottom: var(--xs);">Nom d'utilisateur :</label>
+            <input type="text" name="username" style="width: 100%; padding: var(--xs); box-sizing: border-box;" required>
+        </div>
+
+        <div style="margin-bottom: var(--m);">
+            <label style="display: block; font-weight: bold; margin-bottom: var(--xs);">Mot de passe :</label>
+            <input type="password" name="password" style="width: 100%; padding: var(--xs); box-sizing: border-box;" required>
+        </div>
+
+        <button type="submit" class="btn-principal" style="width: 100%;">
+            Se connecter
+        </button>
+    </form>
+
+    <p style="text-align: center; margin-top: var(--m); font-size: 16px;">
+        Nouveau sur la plateforme ? <a href="{% url 'inscription' %}" style="color: var(--accent);">Créer un compte ici</a>
+    </p>
+</div>
+{% endblock %}
