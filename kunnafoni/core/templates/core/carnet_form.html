@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+{% block title %}{{ titre }} - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <a href="{% url 'carnet_liste' %}" style="color: var(--accent); font-size: 16px;">&larr; Retour à l'historique</a>
+    
+    <h2 style="margin-top: var(--s); color: var(--accent);">{{ titre }}</h2>
+
+    <!-- Avertissement médical obligatoire (Page 2) -->
+    <div class="alerte-medicale">
+        <p style="margin: 0; font-size: 16px;">
+            <strong>⚠️ Rappel : </strong>Cette application ne remplace pas un avis médical, et en cas de doute il faut consulter un professionnel de santé.
+        </p>
+    </div>
+
+    <form method="post" style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-top: var(--m);">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div style="margin-bottom: var(--s);">
+                <label style="display: block; font-weight: bold; margin-bottom: var(--xs); font-size: 16px;">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <p style="color: var(--attention); font-size: 14px; margin: 4px 0 0 0;">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-principal" style="width: 100%; margin-top: var(--s);">
+            Enregistrer l'examen
+        </button>
+    </form>
+</div>
+{% endblock %}

@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from core import views
 
+
 # UN SEUL TABLEAU UNIQUE contenant toutes les routes de l'application
 urlpatterns = [
     # 1. L'administration native de Django
@@ -19,6 +20,13 @@ urlpatterns = [
     path('inscription/', views.inscription, name='inscription'),
     path('', views.accueil, name='accueil'),
     path('infos/', views.portail_infos, name='infos'),
+    
+    
+    # NOUVELLES URLs : LE CARNET DE SUIVI CRUD (Page 7)
+    path('carnet/', views.carnet_liste, name='carnet_liste'),
+    path('carnet/ajouter/', views.carnet_ajouter, name='carnet_ajouter'),
+    path('carnet/<int:pk>/modifier/', views.carnet_modifier, name='carnet_modifier'),
+    path('carnet/<int:pk>/supprimer/', views.carnet_supprimer, name='carnet_supprimer'),
     
     # 4. Route test de sécurité fournisseur (Critère d'acceptation F1)
     path('fournisseur/campagnes/publier/', views.publier_campagne_template, name='publier_campagne'),

@@ -22,12 +22,16 @@
         <!-- Avertissement médical -->
     <div class="alerte-medicale" style="margin-bottom: var(--m); display: flex; align-items: flex-start; gap: var(--xs);">
          <!-- Inclusion de l'icône SVG stockée en local dans le dossier static -->
-         <img src="{% static 'core/images/shield-alert.svg' %}" alt="Alerte" style="width: 24px; height: 24px; flex-shrink: 0; margin-top: 2px;">
+         <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B14B3F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                 <path d="M20 13c0 5-3.5 7.5-7.66 9.7a1 1 0 0 1-.68 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .76-.97l8-2a1 1 0 0 1 .48 0l8 2A1 1 0 0 1 20 6z"/>
+                 <path d="M12 8v4"/>
+                 <path d="M12 16h.01"/>
+         </svg>
     
          <div>
-             <small style="color: var(--attention); font-weight: bold; display: block; margin-bottom: 4px;">⚠️ RAPPEL DE SÉCURITÉ :</small>
+             <small style="color: var(--attention); font-weight: bold; display: block; margin-bottom: 4px;"> RAPPEL DE SÉCURITÉ :</small>
              <p style="margin: 0; font-size: 16px; line-height: 1.4;">
-                 Kunnafoni n'émet aucun diagnostic. En cas de doute ou de symptôme inhabituel, consultez immédiatement un médecin.
+                  Cette application ne remplace pas un avis médical, et en cas de doute il faut consulter un professionnel de santé.
              </p>
          </div>
    </div>
@@ -46,9 +50,9 @@
                 <h3 style="margin-top: 0; color: var(--accent);">📅 Carnet de Palpation</h3>
                 <p style="font-size: 16px; color: var(--texte);">Enregistrez vos observations mensuelles et suivez la régularité de vos examens en toute confidentialité.</p>
                 <!-- Le lien vers le carnet sera activé au Jour 3 -->
-                <button class="btn-principal" style="width: 100%; background-color: var(--discret); cursor: not-allowed;" disabled>
-                    Mon carnet (Bientôt disponible)
-                </button>
+                <a href="{% url 'carnet_liste' %}" class="btn-principal" style="display: block; text-align: center;">
+                      Mon carnet de suivi
+                </a>
             </div>
 
         </div>

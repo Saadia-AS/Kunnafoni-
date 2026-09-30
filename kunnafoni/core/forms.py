@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Profil
+from .models import Autopalpation
 
 class InscriptionForm(UserCreationForm):
     role = forms.ChoiceField(
@@ -36,3 +37,36 @@ class InscriptionForm(UserCreationForm):
         if role == 'FOURNISSEUR' and not structure:
             self.add_error('structure', "Les fournisseurs de données doivent obligatoirement renseigner le nom de leur structure.")
         return cleaned_data
+
+
+class AutopalpationForm(forms.ModelForm):
+    class Meta:
+        model = Autopalpation
+        # Les champs modifiables par l'utilisatrice (L'utilisatrice est gérée en arrière-plan par la vue)
+        fields = ['date', 'sein', 'observation', 'notes']
+        
+        # Personnalisation des widgets pour un affichage mobile confortable (Page 8)
+        widgets = {
+            'date': forms.DateInput(attrs={
+                'type': 'date', 
+                'style': 'width: 100%; padding: var(--xs); box-sizing: border-box;'
+            }),
+            'sein': forms.Select(attrs={
+                'style': 'width: 100%; padding: var(--xs); box-sizing: border-box;'
+            }),
+            'observation': forms.Select(attrs={
+                'style': 'width: 100%; padding: var(--xs); box-sizing: border-box;'
+            }),
+            'notes': forms.Textarea(attrs={
+                'placeholder': 'Précisions libres (facultatif)... Ex: Une légère sensibilité au toucher.',
+                'rows': 4,
+                'style': 'width: 100%; padding: var(--xs); box-sizing: border-box; font-family: inherit;'
+            }),
+        }
+        
+        labels = {
+            'date': "Date de l'examen",
+            'sein': "Quel sein a été examiné ?",
+            'observation': "Qu'avez-vous constaté ? (Factuel)",
+            'notes': "Notes et remarques complémentaires",
+        }

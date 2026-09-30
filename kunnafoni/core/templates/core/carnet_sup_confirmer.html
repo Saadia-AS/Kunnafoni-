@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+{% block title %}Confirmer la suppression - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-top: var(--l); background: var(--surface); padding: var(--m); border-radius: var(--rayon); box-shadow: var(--ombre);">
+    <h2 style="color: var(--attention); margin-top: 0;">Supprimer cette entrée ?</h2>
+    <p style="font-size: 17px; color: var(--texte); margin-bottom: var(--m);">
+        Êtes-vous sûre de vouloir supprimer définitivement l'examen du <strong>{{ entree.date|date:"d F Y" }}</strong> pour le <strong>{{ entree.get_sein_display }}</strong> ? Cette action est irréversible.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-principal" style="background-color: var(--attention); width: 100%; margin-bottom: var(--s);">
+            Oui, supprimer définitivement
+        </button>
+        <a href="{% url 'carnet_liste' %}" style="display: block; color: var(--discret); text-decoration: none; font-size: 16px; margin-top: var(--s);">
+            Annuler et retourner au carnet
+        </a>
+    </form>
+</div>
+{% endblock %}
