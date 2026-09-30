@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+{% block title %}Mon Carnet - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <a href="{% url 'accueil' %}" style="color: var(--accent); font-size: 16px;">&larr; Retour à l'accueil</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--m);">
+        <h2 style="color: var(--accent); margin: 0;">Mon Carnet de Suivi</h2>
+        <a href="{% url 'carnet_ajouter' %}" class="btn-principal" style="padding: var(--xs) var(--s); font-size: 16px;">+ Ajouter</a>
+    </div>
+
+    <!-- Affichage des messages d'alertes fixes si anomalie signalée (Page 2 et 6) -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alerte-medicale" style="background: #FFF9F9;">
+                <p style="margin: 0; font-size: 16px; color: var(--texte);">{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Liste chronologique des autopalpations -->
+    <div style="margin-top: var(--m);">
+        {% for entree in entrees %}
+            <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-bottom: var(--s); position: relative;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <strong style="font-size: 16px; color: var(--discret);">📅 {{ entree.date|date:"d F Y" }}</strong>
+                        <p style="margin: var(--xs) 0 4px 0; font-size: 17px;">
+                            Examen : <strong>{{ entree.get_sein_display }}</strong>
+                        </p>
+                        <p style="margin: 0 0 var(--xs) 0; font-size: 17px;">
+                            Constat : 
+                            <span style="color: {% if entree.observation == 'RAS' %}var(--texte){% else %}var(--attention){% endif %}; font-weight: bold;">
+                                {{ entree.get_observation_display }}
+                            </span>
+                        </p>
+                        {% if entree.notes %}
+                            <p style="background: var(--fond); padding: var(--xs); border-radius: var(--rayon); font-size: 15px; color: #4A4A4A; margin: var(--xs) 0 0 0; font-style: italic;">
+                                "{{ entree.notes }}"
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Liens d'actions de modification/suppression du CRUD (Page 3) -->
+                <div style="margin-top: var(--s); border-top: 1px solid #EEE; padding-top: var(--xs); display: flex; gap: var(--m); justify-content: flex-end;">
+                    <a href="{% url 'carnet_modifier' entree.pk %}" style="color: var(--accent); text-decoration: none; font-size: 15px; font-weight: bold;">✏️ Modifier</a>
+                    <a href="{% url 'carnet_supprimer' entree.pk %}" style="color: var(--attention); text-decoration: none; font-size: 15px; font-weight: bold;">🗑️ Supprimer</a>
+                </div>
+            </div>
+        {% empty %}
+            <!-- 🕳️ Écran vide soigné (Exigence de la Page 8) -->
+            <div style="text-align: center; background: var(--surface); padding: var(--l) var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-top: var(--m);">
+                <p style="color: var(--discret); font-size: 18px; margin-bottom: var(--m);">Votre carnet est vide. Enregistrez votre première autopalpation.</p>
+                <a href="{% url 'carnet_ajouter' %}" class="btn-principal">Commencer mon suivi</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
