@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Informations médicales - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <a href="{% url 'accueil' %}" style="color: var(--accent); font-size: 16px;">&larr; Retour à l'accueil</a>
+    
+    <h1 style="color: var(--accent); margin-top: var(--s);">Portail de Sensibilisation</h1>
+
+    <!-- ⚠️ AVERTISSEMENT MÉDICAL OBLIGATOIRE ET NON NÉGOCIABLE (Page 2) -->
+    <div class="alerte-medicale">
+        <strong style="color: var(--attention);">⚠️ Avertissement important :</strong>
+        <p style="margin: var(--xs) 0 0 0; font-size: 17px;">
+            Cette application ne remplace pas un avis médical. En cas de doute, de douleur ou de découverte d'une anomalie, il est indispensable de consulter rapidement un professionnel de santé.
+        </p>
+    </div>
+
+    <!-- Rubrique Prévention -->
+    <section style="margin-top: var(--l);">
+        <h2>1. Méthodes Préventives</h2>
+        {% for article in articles_prevention %}
+            <article style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); margin-bottom: var(--s); box-shadow: var(--ombre);">
+                <h3>{{ article.titre }}</h3>
+                <p>{{ article.contenu }}</p>
+                <small style="color: var(--discret);">Source : {{ article.source }} | Mis à jour le : {{ article.mis_a_jour_le }}</small>
+            </article>
+        {% empty %}
+            <p style="color: var(--discret);">Aucun article dans cette rubrique pour le moment.</p>
+        {% endfor %}
+    </section>
+
+    <!-- Rubrique Symptômes -->
+    <section style="margin-top: var(--l);">
+        <h2>2. Symptômes et Signes d'Alerte</h2>
+        {% for article in articles_symptomes %}
+            <article style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); margin-bottom: var(--s); box-shadow: var(--ombre);">
+                <h3>{{ article.titre }}</h3>
+                <p>{{ article.contenu }}</p>
+                <small style="color: var(--discret);">Source : {{ article.source }} | Mis à jour le : {{ article.mis_a_jour_le }}</small>
+            </article>
+        {% empty %}
+            <p style="color: var(--discret);">Aucun article dans cette rubrique pour le moment.</p>
+        {% endfor %}
+    </section>
+
+    <!-- Rubrique Importance Dépistage -->
+    <section style="margin-top: var(--l);">
+        <h2>3. Le Dépistage Précoce</h2>
+        {% for article in articles_depistage %}
+            <article style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); margin-bottom: var(--s); box-shadow: var(--ombre);">
+                <h3>{{ article.titre }}</h3>
+                <p>{{ article.contenu }}</p>
+                <small style="color: var(--discret);">Source : {{ article.source }} | Mis à jour le : {{ article.mis_a_jour_le }}</small>
+            </article>
+        {% empty %}
+            <p style="color: var(--discret);">Aucun article dans cette rubrique pour le moment.</p>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

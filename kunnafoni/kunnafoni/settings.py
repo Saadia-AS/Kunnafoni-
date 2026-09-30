@@ -126,3 +126,6 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# kunnafoni/settings.py (Tout en bas)
+LOGIN_URL = 'connexion'
