@@ -7,7 +7,14 @@
     <a href="{% url 'accueil' %}" style="color: var(--accent); font-size: 16px;">&larr; Retour à l'accueil</a>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--m);">
         <h2 style="color: var(--accent); margin: 0;">Mon Carnet de Suivi</h2>
-        <a href="{% url 'carnet_ajouter' %}" class="btn-principal" style="padding: var(--xs) var(--s); font-size: 16px;">+ Ajouter</a>
+        <div style="display: flex; gap: var(--xs);">
+             <a href="{% url 'carnet_evolution' %}" style="background: none; border: 1px solid var(--accent); color: var(--accent); padding: var(--xs) var(--s); font-size: 16px; border-radius: var(--rayon); text-decoration: none; font-weight: bold; display: flex; align-items: center;">
+            📈 Évolution
+             </a>
+             <a href="{% url 'carnet_ajouter' %}" class="btn-principal" style="padding: var(--xs) var(--s); font-size: 16px;">
+                + Ajouter
+             </a>
+        </div>
     </div>
 
     <!-- Affichage des messages d'alertes fixes si anomalie signalée (Page 2 et 6) -->
