@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+{% block title %}Suivi de l'évolution - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <a href="{% url 'carnet_liste' %}" style="color: var(--accent); font-size: 16px; text-decoration: none;">&larr; Retour au carnet</a>
+    
+    <h2 style="color: var(--accent); margin-top: var(--s);">Suivi Statistique & Évolution</h2>
+
+    <!-- 🗓️ SECTION 1 : JOURS ÉCOULÉS -->
+    <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-bottom: var(--m); text-align: center;">
+        <h3 style="margin: 0; font-size: 16px; color: var(--discret);">Temps écoulé depuis le dernier examen</h3>
+        <p style="font-size: 36px; font-weight: bold; color: var(--accent); margin: var(--xs) 0 0 0;">
+            {% if jours_ecoules is not None %}
+                {{ jours_ecoules }} <span style="font-size: 20px;">jour{{ jours_ecoules|pluralize }}</span>
+            {% else %}
+                <span style="font-size: 20px; color: var(--discret);">Aucun examen enregistré</span>
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- 📊 SECTION 2 : GRAPHIQUE EN BARRES CSS (Fait main, sans framework) -->
+    <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-bottom: var(--m);">
+        <h3 style="margin-top: 0; font-size: 16px; color: var(--texte);">Régularité des examens (12 derniers mois)</h3>
+        
+        <!-- Zone d'affichage du graphique -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; height: 160px; border-bottom: 2px solid var(--discret); padding-top: var(--m); margin-bottom: var(--xs);">
+            {% for mois in mois_graphique %}
+                <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+                    <!-- La hauteur de cette div est calculée dynamiquement par la vue -->
+                    <div style="background-color: var(--accent); width: 16px; height: {{ mois.hauteur_css }}px; border-radius: 4px 4px 0 0; transition: height 0.3s ease;"></div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Axe des étiquettes des mois -->
+        <div style="display: flex; justify-content: space-between;">
+            {% for mois in mois_graphique %}
+                <span style="font-size: 12px; color: var(--discret); flex: 1; text-align: center;">{{ mois.nom }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 📋 SECTION 3 : LISTE DES ALERTES CLINIQUE CONSTATIONS (Critère d'acceptation : Faits bruts, aucun jugement) -->
+    <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
+        <h3 style="margin-top: 0; color: var(--attention);">📋 Signes d'alerte et observations enregistrées</h3>
+        <p style="font-size: 14px; color: var(--discret); margin-bottom: var(--s);">Liste factuelle brute destinée à faciliter votre échange avec un professionnel de santé :</p>
+
+        {% for anomalie in anomalies %}
+            <div style="border-left: 3px solid var(--attention); padding-left: var(--xs); margin-bottom: var(--s);">
+                <small style="color: var(--discret); font-weight: bold;">📅 {{ anomalie.date|date:"d F Y" }}</small>
+                <p style="margin: 2px 0; font-size: 16px;">
+                    Localisation : <strong>{{ anomalie.get_sein_display }}</strong> | Constat brut : <strong>{{ anomalie.get_observation_display }}</strong>
+                </p>
+                {% if anomalie.notes %}
+                    <p style="margin: 0; font-size: 14px; color: var(--discret); font-style: italic;">Note saisie : "{{ anomalie.notes }}"</p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p style="color: var(--discret); font-size: 15px; margin: 0; font-style: italic;">Aucune observation d'anomalie enregistrée dans votre historique.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

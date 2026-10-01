@@ -28,6 +28,8 @@ urlpatterns = [
     path('carnet/<int:pk>/modifier/', views.carnet_modifier, name='carnet_modifier'),
     path('carnet/<int:pk>/supprimer/', views.carnet_supprimer, name='carnet_supprimer'),
     
+    path('carnet/evolution/', views.carnet_evolution, name='carnet_evolution'),
+    
     # 4. Route test de sécurité fournisseur (Critère d'acceptation F1)
     path('fournisseur/campagnes/publier/', views.publier_campagne_template, name='publier_campagne'),
 ]

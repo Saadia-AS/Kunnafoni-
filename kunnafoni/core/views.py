@@ -8,6 +8,9 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .models import Autopalpation
 from .forms import AutopalpationForm
+from django.utils import timezone
+from datetime import timedelta
+from collections import OrderedDict
 
 """ Vue d'Inscription (Création synchronisée Compte + Profil)"""
 def inscription(request):
@@ -127,3 +130,49 @@ def carnet_supprimer(request, pk):
         return redirect('carnet_liste')
         
     return render(request, 'core/carnet_sup_confirmer.html', {'entree': entree})
+
+@login_required
+def carnet_evolution(request):
+    maintenant = timezone.now().date()
+    il_y_a_un_an = maintenant - timedelta(days=365)
+    
+    # 🛡️ CLOISONNEMENT STRICT : Uniquement les données de l'utilisatrice connectée
+    toutes_palpations = Autopalpation.objects.filter(utilisatrice=request.user)
+    palpations_annee = toutes_palpations.filter(date__gte=il_y_a_un_an)
+
+    # 1. CALCUL DU NOMBRE DE JOURS ÉCOULÉS DEPUIS LA DERNIÈRE PALPATION
+    derniere_palpation = toutes_palpations.order_by('-date').first()
+    if derniere_palpation:
+        jours_ecoules = (maintenant - derniere_palpation.date).days
+    else:
+        jours_ecoules = None # Signifie "Aucun examen enregistré à ce jour"
+
+    # 2. PRÉPARATION DU GRAPHIQUE MENSUEL EN CSS PUR (12 derniers mois glissants)
+    # On initialise un dictionnaire pour les 12 derniers mois avec 0 palpation
+    mois_graphique = OrderedDict()
+    for i in range(11, -1, -1):
+        date_mois = maintenant - timedelta(days=i*30)
+        cle_mois = date_mois.strftime("%Y-%m")
+        nom_mois_court = date_mois.strftime("%b") # Ex: "Jan", "Feb"...
+        mois_graphique[cle_mois] = {'nom': nom_mois_court, 'total': 0, 'hauteur_css': 0}
+
+    # On remplit avec les vraies données de l'utilisatrice
+    for p in palpations_annee:
+        cle_p = p.date.strftime("%Y-%m")
+        if cle_p in mois_graphique:
+            mois_graphique[cle_p]['total'] += 1
+
+    # On calcule la hauteur de chaque barre en pourcentage (1 palpation/mois = 100% de l'objectif mensuel)
+    for cle, data in mois_graphique.items():
+        # Si l'utilisatrice a fait 1 palpation ou plus, la barre monte à 100% max
+        data['hauteur_css'] = min(data['total'] * 100, 100)
+
+    # 3. LISTE FACTUELLE DES ANOMALIES (Sans aucun jugement médical)
+    anomalies = toutes_palpations.exclude(observation="RAS").order_by('-date')
+
+    context = {
+        'jours_ecoules': jours_ecoules,
+        'mois_graphique': mois_graphique.values(),
+        'anomalies': anomalies,
+    }
+    return render(request, 'core/evolution.html', context)
