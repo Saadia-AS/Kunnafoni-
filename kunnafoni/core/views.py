@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from .forms import InscriptionForm
-from .models import Profil, Article
+from .models import Profil, Article, Autopalpation, Campagne
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .models import Autopalpation
@@ -11,6 +11,7 @@ from .forms import AutopalpationForm
 from django.utils import timezone
 from datetime import timedelta
 from collections import OrderedDict
+
 
 """ Vue d'Inscription (Création synchronisée Compte + Profil)"""
 def inscription(request):
@@ -40,15 +41,43 @@ def inscription(request):
 # MODIFICATION ICI : Sécurisation de la vue accueil pour le compte Superutilisateur
 @login_required
 def accueil(request):
-    """ Filet de sécurité pour les comptes créés via le terminal (ex: Superuser) """
     try:
         profil = request.user.profil
     except Profil.DoesNotExist:
-        # Génère automatiquement un profil par défaut pour l'admin afin d'éviter le crash
         profil = Profil.objects.create(utilisateur=request.user, role='UTILISATRICE')
         
-    return render(request, 'core/accueil.html', {'profil': profil})
+    # Initialisation des variables pour le tableau de bord
+    afficher_rappel_30_jours = False
+    campagnes_a_venir = []
+    
+    if profil.role == "UTILISATRICE":
+        maintenant = timezone.now().date()
+        
+        # 1. ALGORITHME DES 30 JOURS (Issue #5)
+        derniere_palpation = Autopalpation.objects.filter(utilisatrice=request.user).order_by('-date').first()
+        
+        if Cache_ou_Aucun_Examen := not derniere_palpation:
+            # Si aucun examen n'est enregistré -> On affiche l'alerte d'invitation (Page 3)
+            afficher_rappel_30_jours = True
+        else:
+            # Si le délai depuis le dernier examen dépasse 30 jours -> On déclenche l'alerte
+            jours_ecoules = (maintenant - derniere_palpation.date).days
+            if jours_ecoules >= 30:
+                afficher_rappel_30_jours = True
 
+        # 2. RAPPELS DES CAMPAGNES DE DÉPISTAGE À VENIR (Page 3)
+        # On récupère les campagnes validées par l'admin dont la date est aujourd'hui ou dans le futur
+        campagnes_a_venir = Campagne.objects.filter(
+            validee=True,
+            date__gte=maintenant
+        ).order_by('date')[:3] # On limite aux 3 prochaines campagnes pour ne pas surcharger l'écran mobile
+
+    context = {
+        'profil': profil,
+        'afficher_rappel_30_jours': afficher_rappel_30_jours,
+        'campagnes_a_venir': campagnes_a_venir,
+    }
+    return render(request, 'core/accueil.html', context)
 # 3. F2 - Vue du Portail d'Information (Sensibilisation médicale) - Page 2 & 7
 @login_required
 def portail_infos(request):
