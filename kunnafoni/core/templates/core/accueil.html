@@ -18,6 +18,30 @@
     <!-- INTERFACE DESTINÉ AUX UTILISATRICES (Grand public) -->
     
     {% if request.user.profil.role == "UTILISATRICE" %}
+
+        <!-- 🔔 ALERTE 1 : LE RAPPEL AUTOMATIQUE DES 30 JOURS (Issue #5) -->
+        {% if afficher_rappel_30_jours %}
+          <div style="background: #FFF3CD; border-left: 4px solid #FFA500; padding: var(--s); border-radius: var(--rayon); margin-bottom: var(--s);">
+            <strong style="color: #D35400; font-size: 16px;">⏰ Rappel d'examen mensuel</strong>
+            <p style="margin: 4px 0 0 0; font-size: 16px; color: var(--texte);">
+                Il est temps de réaliser votre autopalpation de contrôle ce mois-ci pour maintenir votre suivi régulier.
+            </p>
+          </div>
+        {% endif %}
+
+    <!-- 📢 ALERTE 2 : LES RAPPELS DE CAMPAGNES DE DÉPISTAGE À VENIR -->
+        {% if campagnes_a_venir %}
+          <div style="background: #E8F4FD; border-left: 4px solid var(--accent); padding: var(--s); border-radius: var(--rayon); margin-bottom: var(--m);">
+            <strong style="color: var(--accent); font-size: 16px;">📢 Campagnes de dépistage gratuit à venir</strong>
+            <ul style="margin: var(--xs) 0 0 0; padding-left: var(--m); font-size: 16px; color: var(--texte);">
+                {% for campagne in campagnes_a_venir %}
+                    <li style="margin-bottom: 4px;">
+                        <strong>Le {{ campagne.date|date:"d F" }} :</strong> {{ campagne.structure }} à {{ campagne.lieu }} (à partir de {{ campagne.heure|time:"H:i" }})
+                    </li>
+                {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
         
         <!-- Avertissement médical -->
     <div class="alerte-medicale" style="margin-bottom: var(--m); display: flex; align-items: flex-start; gap: var(--xs);">
