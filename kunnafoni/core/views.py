@@ -11,6 +11,7 @@ from .forms import AutopalpationForm
 from django.utils import timezone
 from datetime import timedelta
 from collections import OrderedDict
+from .forms import CampagneForm
 
 
 """ Vue d'Inscription (Création synchronisée Compte + Profil)"""
@@ -72,12 +73,19 @@ def accueil(request):
             date__gte=maintenant
         ).order_by('date')[:3] # On limite aux 3 prochaines campagnes pour ne pas surcharger l'écran mobile
 
+    elif profil.role == "FOURNISSEUR":
+        # 🛡️ CLOISONNEMENT STRICT : L'hôpital ne voit QUE les campagnes qu'il a lui-même envoyées
+        mes_campagnes_pro = Campagne.objects.filter(fournisseur=request.user).order_by('-date')
+
     context = {
         'profil': profil,
         'afficher_rappel_30_jours': afficher_rappel_30_jours,
         'campagnes_a_venir': campagnes_a_venir,
+        'mes_campagnes_pro': mes_campagnes_pro, # 👈 On envoie la liste au fichier HTML
     }
     return render(request, 'core/accueil.html', context)
+    
+   
 # 3. F2 - Vue du Portail d'Information (Sensibilisation médicale) - Page 2 & 7
 @login_required
 def portail_infos(request):
@@ -96,9 +104,25 @@ def portail_infos(request):
 # 4. Simulation d'URL Fournisseur protégée pour tester le critère d'acceptation (Page 2)
 @login_required
 def publier_campagne_template(request):
+    # 🛡️ SÉCURITÉ INVIOLABLE : Seuls les Fournisseurs ont accès (Page 10)
     if request.user.profil.role != "FOURNISSEUR":
-        raise PermissionDenied 
-    return render(request, 'core/fournisseur_campagnes.html')
+        raise PermissionDenied # Déclenche l'erreur 403 requise
+        
+    if request.method == 'POST':
+        # Attention : request.FILES est obligatoire pour capturer le fichier PDF !
+        form = CampagneForm(request.POST, request.FILES)
+        if form.is_valid():
+            campagne = form.save(commit=False)
+            campagne.fournisseur = request.user # On lie automatiquement l'hôpital connecté
+            campagne.validee = False # Masquée par défaut jusqu'à validation Admin (F7)
+            campagne.save()
+            
+            messages.success(request, "Votre communiqué officiel a été transmis avec succès. La campagne sera publiée dès validation par l'équipe de modération.")
+            return redirect('accueil')
+    else:
+        form = CampagneForm()
+        
+    return render(request, 'core/fournisseur_campagnes.html', {'form': form})
 
 
 # 1. LIRE : Liste historique du carnet (Page 3)

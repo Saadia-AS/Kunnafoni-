@@ -104,7 +104,32 @@
             </div>
 
         </div>
-
+         <!-- 📊 NOUVEAU : TABLEAU DE BORD - HISTORIQUE DES DÉPÔTS DE L'HÔPITAL -->
+        <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-top: var(--m);">
+            <h3 style="margin-top: 0; color: var(--accent);">📊 Suivi de vos communiqués transmis</h3>
+            
+            <div style="display: grid; gap: var(--s); margin-top: var(--s);">
+                {% for c in mes_campagnes_pro %}
+                    <div style="border-left: 4px solid {% if c.validee %}#28A745{% else %}#FFC107{% endif %}; padding-left: var(--xs); background: var(--fond); padding: var(--xs); border-radius: 0 var(--rayon) var(--rayon) 0;">
+                        <span style="font-size: 13px; color: var(--discret); font-weight: bold;">📅 Événement prévu le : {{ c.date|date:"d F Y" }} à {{ c.heure|time:"H:i" }}</span>
+                        <p style="margin: 4px 0; font-size: 16px;">Structure : <strong>{{ c.structure }}</strong> | Lieu : {{ c.lieu }}</p>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--xs); border-top: 1px solid #E2E8F0; padding-top: 4px;">
+                            <!-- Statut de modération factuel (Issue #7) -->
+                            <span style="font-size: 14px; font-weight: bold; color: {% if c.validee %}#28A745{% else %}#D35400{% endif %};">
+                                {% if c.validee %}✅ Validée et Publiée{% else %}⏳ En attente de validation admin{% endif %}
+                            </span>
+                            
+                            <!-- Lien direct pour vérifier le fichier (F8) -->
+                            <a href="{{ c.communique.url }}" target="_blank" style="color: var(--accent); font-size: 14px; font-weight: bold; text-decoration: none;">📄 Voir le document</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p style="color: var(--discret); font-size: 15px; font-style: italic; margin: 0;">Aucun communiqué officiel transmis pour le moment.</p>
+                {% endfor %}
+            </div>
+        </div>
     {% endif %}
+
 </div>
 {% endblock %}
