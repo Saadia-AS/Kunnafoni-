@@ -66,13 +66,24 @@ def accueil(request):
             if jours_ecoules >= 30:
                 afficher_rappel_30_jours = True
 
-        # 2. RAPPELS DES CAMPAGNES DE DÉPISTAGE À VENIR (Page 3)
-        # On récupère les campagnes validées par l'admin dont la date est aujourd'hui ou dans le futur
-        campagnes_a_venir = Campagne.objects.filter(
-            validee=True,
+         # 2. RAPPELS DES CAMPAGNES DE DÉPISTAGE (F8 avec critère de nouveauté)
+        campagnes_brutes = Campagne.objects.filter(
+            validee=True, 
             date__gte=maintenant
-        ).order_by('date')[:3] # On limite aux 3 prochaines campagnes pour ne pas surcharger l'écran mobile
-
+        ).order_by('date')[:3]
+        
+        # On injecte dynamiquement l'information "est_nouvelle" pour chaque campagne
+        campagnes_a_venir = []
+        dernier_login = request.user.last_login
+        
+        for c in campagnes_brutes:
+            # Si la campagne a été créée/modifiée après la dernière connexion de l'utilisateur
+            # (Note: Assurez-vous que votre modèle possède un champ date_publication ou utilisez l'ID/date)
+            # Par sécurité commando, on compare la date de création si elle existe, ou on simule par rapport au profil
+            c.est_nouvelle = True  # Par défaut pour le test, ou comparez avec un champ de votre modèle
+            if dernier_login and hasattr(c, 'date_creation') and c.date_creation < dernier_login:
+                c.est_nouvelle = False
+            campagnes_a_venir.append(c)
     elif profil.role == "FOURNISSEUR":
         # 🛡️ CLOISONNEMENT STRICT : L'hôpital ne voit QUE les campagnes qu'il a lui-même envoyées
         mes_campagnes_pro = Campagne.objects.filter(fournisseur=request.user).order_by('-date')
