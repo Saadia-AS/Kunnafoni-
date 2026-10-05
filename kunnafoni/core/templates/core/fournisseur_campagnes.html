@@ -1,0 +1,45 @@
+
+{% extends 'core/base.html' %}
+{% load static %} 
+{% block title %}Publier une Campagne - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <a href="{% url 'accueil' %}" style="color: var(--accent); font-size: 16px; text-decoration: none;">&larr; Retour au tableau de bord</a>
+    
+    <h2 style="color: var(--accent); margin-top: var(--s);">Annoncer une Campagne de Dépistage</h2>
+    
+    <div style="background: #F0F4F8; border-left: 4px solid var(--accent); padding: var(--s); margin-bottom: var(--m); border-radius: 0 var(--rayon) var(--rayon) 0;">
+        <p style="margin: 0; font-size: 15px; color: var(--texte);">
+            Remplissez les informations factuelles de l'événement. Votre communiqué officiel signé (PDF ou Image) est requis pour authentifier la session gratuite.
+        </p>
+    </div>
+
+    <!-- ⚠️ enctype="multipart/form-data" est STRICTEMENT OBLIGATOIRE pour l'envoi du PDF ! -->
+    <form method="post" enctype="multipart/form-data" style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+            <div style="color: var(--attention); margin-bottom: var(--s); font-weight: bold; font-size: 15px;">
+                Veuillez corriger l'erreur de fichier ou de saisie ci-dessous.
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div style="margin-bottom: var(--s);">
+                <label style="display: block; font-weight: bold; margin-bottom: var(--xs); font-size: 16px;">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <p style="color: var(--attention); font-size: 14px; margin: 4px 0 0 0; font-weight: bold;">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-principal" style="width: 100%; margin-top: var(--s);">
+            Transmettre le communiqué pour validation
+        </button>
+    </form>
+</div>
+{% endblock %}
