@@ -50,7 +50,7 @@ def accueil(request):
     # Initialisation des variables pour le tableau de bord
     afficher_rappel_30_jours = False
     campagnes_a_venir = []
-    
+    mes_campagnes_pro = []
     if profil.role == "UTILISATRICE":
         maintenant = timezone.now().date()
         
