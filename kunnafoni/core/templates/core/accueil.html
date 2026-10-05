@@ -31,18 +31,45 @@
 
     <!-- 📢 ALERTE 2 : LES RAPPELS DE CAMPAGNES DE DÉPISTAGE À VENIR -->
         {% if campagnes_a_venir %}
-          <div style="background: #E8F4FD; border-left: 4px solid var(--accent); padding: var(--s); border-radius: var(--rayon); margin-bottom: var(--m);">
-            <strong style="color: var(--accent); font-size: 16px;">📢 Campagnes de dépistage gratuit à venir</strong>
-            <ul style="margin: var(--xs) 0 0 0; padding-left: var(--m); font-size: 16px; color: var(--texte);">
-                {% for campagne in campagnes_a_venir %}
-                    <li style="margin-bottom: 4px;">
-                        <strong>Le {{ campagne.date|date:"d F" }} :</strong> {{ campagne.structure }} à {{ campagne.lieu }} (à partir de {{ campagne.heure|time:"H:i" }})
-                    </li>
-                {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
+            <div style="margin-bottom: var(--m);">
+                 <h3 style="color: var(--accent); margin-top: 0; margin-bottom: var(--s);">📢 Campagnes de dépistage gratuit</h3>
         
+                 <!-- Grille de cartes (Card Layout) -->
+                 <div style="display: grid; gap: var(--s); grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    {% for campagne in campagnes_a_venir %}
+                         <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); border-top: 4px solid var(--accent); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+                    
+                               <div>
+                                     <!-- 🆕 Badge "Nouvelle" si publiée depuis la dernière visite -->
+                                     {% if campagne.est_nouvelle %}
+                                         <span style="background-color: var(--attention); color: var(--surface); font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 10px; position: absolute; top: var(--xs); right: var(--xs); text-transform: uppercase;">
+                                          Nouvelle
+                                         </span>
+                                     {% endif %}
+                        
+                                     <!-- 🔗 Le nom de la structure sert de lien direct vers le PDF/Image originelle -->
+                                     <h4 style="margin: 0 0 var(--xs) 0; font-size: 18px; padding-right: 60px;">
+                                         <a href="{{ campagne.communique.url }}" target="_blank" style="color: var(--accent); text-decoration: underline; font-weight: bold;">
+                                            {{ campagne.structure }}
+                                         </a>
+                                     </h4>
+                        
+                                     <p style="margin: 0 0 4px 0; font-size: 15px; color: var(--texte);">
+                                        📍 Lieu : <strong>{{ campagne.lieu }}</strong>
+                                     </p>
+                                </div>
+
+                                <div style="margin-top: var(--s); padding-top: var(--xs); border-top: 1px solid var(--fond); display: flex; justify-content: space-between; align-items: center;">
+                                     <span style="font-size: 14px; color: var(--discret); font-weight: bold;">
+                                        📅 {{ campagne.date|date:"d F" }} à {{ campagne.heure|time:"H:i" }}
+                                     </span>
+                                </div>
+
+                         </div>
+                     {% endfor %}
+                 </div>
+             </div>
+         {% endif %}
         <!-- Avertissement médical -->
     <div class="alerte-medicale" style="margin-bottom: var(--m); display: flex; align-items: flex-start; gap: var(--xs);">
          <!-- Inclusion de l'icône SVG stockée en local dans le dossier static -->
