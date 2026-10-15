@@ -1,0 +1,36 @@
+<!-- core/templates/core/guide_autopalpation.html -->
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Guide Technique - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <!-- Retour automatique au formulaire -->
+    <a href="javascript:history.back()" style="color: var(--accent); font-size: 16px; text-decoration: none;">&larr; Retour au formulaire</a>
+    
+    <h2 style="color: var(--bleu-nuit); margin-top: var(--s); margin-bottom: var(--s);">Guide Complet des Gestes d'Autopalpation</h2>
+    
+    <div class="alerte-medicale" style="margin-bottom: var(--m);">
+        <p style="margin: 0; font-size: 16px; color: var(--texte);">
+            <strong>Rigueur Méthodologique :</strong> Suivez pas à pas les étapes de l'infographie officielle ci-dessous pour réaliser correctement votre examen mensuel de contrôle.
+        </p>
+    </div>
+
+    <!-- 📊 UNE SEULE GRANDE CARTE : Centrée, compacte et adaptée à l'ordinateur -->
+    <div style="display: flex; justify-content: center; width: 100%;">
+        <div class="carte" style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); width: 100%; max-width: 600px; box-sizing: border-box;">
+            
+            <!-- 📂 Votre grande image unique regroupant toutes les étapes -->
+            <img src="{% static 'core/images/autopalpation.jpeg' %}" alt="Guide complet des étapes d'autopalpation" style="width: 100%; height: auto; display: block; border-radius: calc(var(--rayon) - 2px); border: 1px solid var(--fond);">
+            
+            <div style="margin-top: var(--s); padding-top: var(--xs); border-top: 1px solid var(--fond);">
+                <small style="color: var(--discret); font-weight: bold; display: block; text-align: center;">
+                    Source : Oncologie sanitaires et Autorités de santé publique
+                </small>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

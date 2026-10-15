@@ -9,7 +9,7 @@
         <h2 style="color: var(--accent); margin: 0;">Mon Carnet de Suivi</h2>
         <div style="display: flex; gap: var(--xs);">
              <a href="{% url 'carnet_evolution' %}" style="background: none; border: 1px solid var(--accent); color: var(--accent); padding: var(--xs) var(--s); font-size: 16px; border-radius: var(--rayon); text-decoration: none; font-weight: bold; display: flex; align-items: center;">
-            📈 Évolution
+             Évolution
              </a>
              <a href="{% url 'carnet_ajouter' %}" class="btn-principal" style="padding: var(--xs) var(--s); font-size: 16px;">
                 + Ajouter
@@ -32,7 +32,7 @@
             <div style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-bottom: var(--s); position: relative;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <strong style="font-size: 16px; color: var(--discret);">📅 {{ entree.date|date:"d F Y" }}</strong>
+                        <strong style="font-size: 16px; color: var(--discret);"> {{ entree.date|date:"d F Y" }}</strong>
                         <p style="margin: var(--xs) 0 4px 0; font-size: 17px;">
                             Examen : <strong>{{ entree.get_sein_display }}</strong>
                         </p>
@@ -52,14 +52,14 @@
 
                 <!-- Liens d'actions de modification/suppression du CRUD (Page 3) -->
                 <div style="margin-top: var(--s); border-top: 1px solid #EEE; padding-top: var(--xs); display: flex; gap: var(--m); justify-content: flex-end;">
-                    <a href="{% url 'carnet_modifier' entree.pk %}" style="color: var(--accent); text-decoration: none; font-size: 15px; font-weight: bold;">✏️ Modifier</a>
-                    <a href="{% url 'carnet_supprimer' entree.pk %}" style="color: var(--attention); text-decoration: none; font-size: 15px; font-weight: bold;">🗑️ Supprimer</a>
+                    <a href="{% url 'carnet_modifier' entree.pk %}" style="color: var(--accent); text-decoration: none; font-size: 15px; font-weight: bold;"> Modifier</a>
+                    <a href="{% url 'carnet_supprimer' entree.pk %}" style="color: var(--attention); text-decoration: none; font-size: 15px; font-weight: bold;"> Supprimer</a>
                 </div>
             </div>
         {% empty %}
             <!-- 🕳️ Écran vide soigné (Exigence de la Page 8) -->
-            <div style="text-align: center; background: var(--surface); padding: var(--l) var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-top: var(--m);">
-                <p style="color: var(--discret); font-size: 18px; margin-bottom: var(--m);">Votre carnet est vide. Enregistrez votre première autopalpation.</p>
+            <div style="text-align: center; background: var(--surface); padding: 10px; border-radius: var(--rayon); box-shadow: var(--ombre); margin-top: var(--m);">
+                <p style="color: var(--discret); font-size: 18px; margin-bottom: 0;">Votre carnet est vide. Enregistrez votre première autopalpation.</p>
                 <a href="{% url 'carnet_ajouter' %}" class="btn-principal">Commencer mon suivi</a>
             </div>
         {% endfor %}

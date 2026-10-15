@@ -1,0 +1,63 @@
+<!-- core/templates/core/galerie_symptomes.html -->
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Illustrations Cliniques - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <a href="{% url 'infos' %}" style="color: var(--accent); font-size: 16px; text-decoration: none;">&larr; Retour au portail</a>
+    
+    <h2 style="color: var(--bleu-nuit); margin-top: var(--s); margin-bottom: var(--s);">Illustrations Visuelles des Symptômes</h2>
+    
+    <div class="alerte-medicale" style="margin-bottom: var(--m);">
+        <p style="margin: 0; font-size: 16px; color: var(--texte);">
+            <strong>Note d'information :</strong> Ces schémas et illustrations factuels sont mis à disposition à titre purement éducatif pour vous aider à identifier les signes d'alerte, sans aucun jugement médical.Veillez consulter un professionnel, si vous présentez une de ces manifestations.
+        </p>
+    </div>
+ 
+    <!-- 📊 Grille de cartes d'images alignées en ligne avec bordures (Mise à jour Dossier Images) -->
+    <div class="cartes" style="display: flex; flex-direction: row; gap: 20px; width: 100%; flex-wrap: wrap;">
+    
+         <!-- Carte Image 1 -->
+         <div class="carte" style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); flex: 1 1 calc(50% - 20px); min-width: 280px;">
+             <!-- 📂 Dossier exact : core/static/core/images/ -->
+             <img src="{% static 'core/images/texture_sein.jpeg' %}" alt="Illustration Masse" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--rayon); border: 1px solid var(--fond);">
+             <h4 style="margin-top: var(--xs); color: var(--bleu-nuit);">Modification de la texture</h4>
+             <p style="font-size: 15px; color: var(--discret); margin: 0;">La peau du sein peut devenir plus épaisse, rugueuse ou présenter un aspect inhabituel.</p>
+         </div>
+         <div class="carte" style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); flex: 1 1 calc(50% - 20px); min-width: 280px;">
+             <!-- 📂 Dossier exact : core/static/core/images/ -->
+             <img src="{% static 'core/images/écoulement_sein.jpeg' %}" alt="Illustration Masse" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--rayon); border: 1px solid var(--fond);">
+             <h4 style="margin-top: var(--xs); color: var(--bleu-nuit);">Ecoulement</h4>
+             <p style="font-size: 15px; color: var(--discret); margin: 0;">Un écoulement spontané du mamelon, surtout s’il est sanglant ou ne concerne qu’un seul sein.</p>
+         </div>
+         <div class="carte" style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); flex: 1 1 calc(50% - 20px); min-width: 280px;">
+             <!-- 📂 Dossier exact : core/static/core/images/ -->
+             <img src="{% static 'core/images/peauorange_sein.jpeg' %}" alt="Illustration Masse" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--rayon); border: 1px solid var(--fond);">
+             <h4 style="margin-top: var(--xs); color: var(--bleu-nuit);">Peau d'orange</h4>
+             <p style="font-size: 15px; color: var(--discret); margin: 0;">La peau du sein peut prendre un aspect capitonné, semblable à la surface d’une orange.</p>
+         </div>
+         <div class="carte" style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); flex: 1 1 calc(50% - 20px); min-width: 280px;">
+             <!-- 📂 Dossier exact : core/static/core/images/ -->
+             <img src="{% static 'core/images/retraction_sein.jpeg' %}" alt="Illustration Masse" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--rayon); border: 1px solid var(--fond);">
+             <h4 style="margin-top: var(--xs); color: var(--bleu-nuit);">Retraction mammaire</h4>
+             <p style="font-size: 15px; color: var(--discret); margin: 0;">La rétractation correspond à un mamelon qui se tourne vers l’intérieur ou change soudainement de position.</p>
+         </div>
+         <!-- Carte Image 2 -->
+         <div class="carte" style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); flex: 1 1 calc(50% - 20px); min-width: 280px;">
+             <!-- 📂 Dossier exact : core/static/core/images/ -->
+             <img src="{% static 'core/images/oedeme_sein.jpeg' %}" alt="Illustration Peau" style="width: 100%; height: 300px; object-fit: cover; border-radius: var(--rayon); border: 1px solid var(--fond);">
+             <h4 style="margin-top: var(--xs); color: var(--bleu-nuit);">Oedème</h4>
+             <p style="font-size: 15px; color: var(--discret); margin: 0;">L’œdème correspond à un gonflement du sein, qui peut parfois s’accompagner d’une sensation de lourdeur ou de tension.</p>
+         </div>
+         <div class="carte" style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); flex: 1 1 calc(50% - 20px); min-width: 280px;">
+             <!-- 📂 Dossier exact : core/static/core/images/ -->
+             <img src="{% static 'core/images/rougeur_sein.jpeg' %}" alt="Illustration Peau" style="width: 100%; height: 300px; object-fit: cover; border-radius: var(--rayon); border: 1px solid var(--fond);">
+             <h4 style="margin-top: var(--xs); color: var(--bleu-nuit);">Rougeur</h4>
+             <p style="font-size: 15px; color: var(--discret); margin: 0;">Une rougeur inhabituelle du sein peut être liée à plusieurs causes, notamment une inflammation ou une infection.</p>
+         </div>
+
+    </div>
+</div>
+{% endblock %}

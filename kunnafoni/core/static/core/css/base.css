@@ -1,66 +1,173 @@
-/* core/static/core/css/base.css */
-
+/* ===== 1. Variables et Palette de Base Imposée ===== */
 :root {
-    /* Couleurs réglementaires imposées (Page 7) */
-    --fond: #FAF9F7;
+    --fond: #EBF0F5; 
     --surface: #FFFFFF;
     --texte: #23252B;
-    --accent: #7A4E7E;      /* Liens et boutons principaux */
-    --attention: #B14B3F;   /* Messages d'invitation à consulter un médecin */
-    --discret: #6C7079;     /* Dates, sources et mentions en bas de page */
-
-    /* Espacements standardisés multiples de 8 (Page 7) */
+    --accent: #7A4E7E;        /* Mauve : Liens et boutons principaux */
+    --attention: #B14B3F;     /* Rouge calme : Messages d'alertes médicales */
+    --discret: #6C7079;       /* Dates et mentions secondaires */
+    --bordure: #E0E0E0;       /* Couleur de bordure fine de votre modèle */
+    --bleu-nuit: #1B2A4A;     /* En-tête et titres structurés de votre modèle */
+    
     --xs: 8px; 
     --s: 16px; 
     --m: 24px; 
-    --l: 40px;
     --rayon: 8px;
     --ombre: 0 1px 3px rgba(35, 37, 43, 0.12);
 }
 
-/* Règles d'accessibilité mobile impératives (Page 8) */
-body {
-    background-color: var(--fond);
-    color: var(--texte);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: var(--s);
-    font-size: 18px;          /* Texte à 18px minimum pour lecture sur téléphone (Pas 14px) */
-    line-height: 1.6;         /* Hauteur de ligne généreuse pour un texte de santé */
-}
-
-/* Lignes de moins de 70 caractères pour faciliter la lecture lente (Page 8) */
-p, li, h1, h2, h3 {
-    max-width: 65ch;
-}
-
-/* Style de base des conteneurs pour éviter tout débordement horizontal sur écran mobile (Page 8) */
-.conteneur {
-    width: 100%;
-    max-width: 480px;         /* Largeur idéale pour un affichage sur smartphone */
-    margin: 0 auto;
+/* ===== 2. Bases & Régalages Généraux ===== */
+* { 
+    margin: 0; 
+    padding: 0; 
     box-sizing: border-box;
 }
 
-/* Les boutons et liens doivent être facilement cliquables au doigt */
-.btn-principal {
-    display: inline-block;
-    background-color: var(--accent);
-    color: var(--surface);
-    padding: var(--s) var(--m);
-    border-radius: var(--rayon);
-    text-decoration: none;
-    text-align: center;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
+body { 
+    background-color: var(--fond);
+    color: var(--texte);
+    font-family: Arial, Helvetica, sans-serif; 
+    line-height: 1.6;
+    padding: var(--s);
+    font-size: 18px; /* Sécurité 18px pour lecture lente sur mobile */
 }
 
-/* Message de recommandation médicale (Couleur attention, calme, pas rouge vif) (Page 8) */
+h1, h2, h3, h4 { 
+    font-family: Georgia, serif; 
+    color: var(--bleu-nuit);
+    max-width: 65ch;
+    margin-bottom: var(--xs);
+}
+
+p, li {
+    max-width: 65ch; /* Lecture confortable */
+    margin-bottom: var(--xs);
+}
+
+.conteneur { 
+    width: 960px; 
+    max-width: 100%; 
+    margin: auto; /* c'est cette ligne qui centre le bloc */ 
+    padding: 20px;
+}
+
+
+/* ===== 3. En-tête (Layout en ligne) ===== */
+.site-header { 
+    background-color: #6C7079;  
+    color: #FFFFFF;
+    padding: var(--s) 0;
+    border-radius: var(--rayon);
+    margin-bottom: var(--m);
+}
+
+.entete { 
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+}
+
+.logo a { 
+    color: #FFFFFF; 
+    font-size: 30px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav a { 
+    color: #FFFFFF; 
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.nav a:hover {
+    color: var(--attention);
+    text-decoration: underline;
+}
+
+/* ===== 4. Le Système de Cartes Alignées en Ligne ===== */
+/* ===== 4. Le Système de Cartes Fléchies Automatiques (Responsive) ===== */
+.cartes { 
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.carte { 
+    width: 50%; /* Divise l'espace en deux parts égales pour l'alignement en ligne */
+    background-color: #FFFFFF; 
+    border: 1px solid #E0E0E0; /* 💥 CORRIGÉ : Syntaxe CSS pure sans virgules */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+
+
+/* ===== 5. Messages d'Alertes Médicales Factuels ===== */
 .alerte-medicale {
-    background-color: #FDF2F0; /* Version très claire du fond d'attention */
+    background-color: #FDF2F0; 
     border-left: 4px solid var(--attention);
+    border-top: 1px solid var(--bordure);
+    border-right: 1px solid var(--bordure);
+    border-bottom: 1px solid var(--bordure);
     padding: var(--s);
     margin: var(--m) 0;
-    border-radius: 0 var(--rayon) var(--rayon) 0;
+    border-radius: var(--rayon);
+}
+
+/* ===== 6. Formulaires Customisés Propres ===== */
+.formulaire label {
+    display: block;
+    margin-top: 18px;
+    font-weight: bold;
+    color: var(--bleu-nuit);
+}
+
+.formulaire input,
+.formulaire select,
+.formulaire textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    background-color: var(--surface);
+}
+
+.btn-principal, .bouton {
+    display: inline-block;
+    background-color: var(--accent);
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 22px;
+    margin-top: var(--s);
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: var(--rayon);
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-principal:hover, .bouton:hover {
+    background-color: #5F3962; /* Version survol plus sombre du mauve */
+}
+
+/* ===== 7. Adaptation Mobile Strict (Responsive) ===== */
+@media (max-width: 700px) {
+     .entete { 
+         flex-direction: column;
+         gap: var(--xs);
+         text-align: center;
+     } 
+     .cartes { 
+         flex-direction: column; /* Aligne verticalement sur smartphone */
+     } 
+     .nav a { 
+        margin: 0 10px; 
+     }
 }

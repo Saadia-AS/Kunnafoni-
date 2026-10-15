@@ -1,0 +1,33 @@
+<!-- core/templates/core/toutes_campagnes.html -->
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Toutes les Campagnes - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m);">
+    <a href="{% url 'accueil' %}" style="color: var(--accent); font-size: 16px; text-decoration: none;">&larr; Retour au tableau de bord</a>
+    
+    <h2 style="color: var(--bleu-nuit); margin-top: var(--s); margin-bottom: var(--m);">Registre Complet des Campagnes Gratuites</h2>
+    
+    <div class="cartes">
+        {% for campagne in campagnes %}
+            <div class="carte" style="position: relative; border: 1px solid var(--bordure); background: var(--surface); padding: var(--s); border-radius: var(--rayon); display: flex; flex-direction: column; justify-content: space-between; flex: 0 1 340px; max-width: 340px;">
+                <div>
+                    <h4 style="margin: 0 0 var(--xs) 0; font-size: 18px;">
+                        <a href="{{ campagne.communique.url }}" target="_blank" style="color: var(--accent); text-decoration: underline; font-weight: bold;">
+                            {{ campagne.structure }}
+                        </a>
+                    </h4>
+                    <p style="margin: 0 0 var(--xs) 0; font-size: 16px; color: var(--texte);">Lieu : <strong>{{ campagne.lieu }}</strong></p>
+                </div>
+                <div style="margin-top: var(--xs); padding-top: var(--xs); border-top: 1px solid var(--fond);">
+                    <span style="font-size: 14px; color: var(--discret); font-weight: bold;">{{ campagne.date|date:"d F Y" }} à {{ campagne.heure|time:"H:i" }}</span>
+                </div>
+            </div>
+        {% empty %}
+            <p style="color: var(--discret); font-style: italic;">Aucune autre campagne n'est enregistrée pour le moment.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
