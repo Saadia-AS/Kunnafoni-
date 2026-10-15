@@ -50,53 +50,71 @@ def deconnexion(request):
 # MODIFICATION ICI : Sécurisation de la vue accueil pour le compte Superutilisateur
 @login_required
 def accueil(request):
+    # 💥 ÉTAPE 1 : Sécurisation absolue du profil connecté en direct
     try:
-        profil = request.user.profil
+        # On force Django à aller chercher le profil réel de l'utilisateur de la session courante
+        profil = Profil.objects.get(utilisateur=request.user)
     except Profil.DoesNotExist:
+        # Sécurité si le profil n'existe pas encore en base de données
         profil = Profil.objects.create(utilisateur=request.user, role='UTILISATRICE')
         
-    # Initialisation des variables pour le tableau de bord
+    # Initialisation propre de toutes les variables de contrôle
     afficher_rappel_30_jours = False
     campagnes_a_venir = []
     mes_campagnes_pro = []
+    toutes_campagnes_publiees = []
+    total_campagnes = 0
+    
+    maintenant = timezone.now().date()
+    
+    # Récupération globale des campagnes officielles validées par l'admin
+    campagnes_globales = Campagne.objects.filter(validee=True, date__gte=maintenant).order_by('date')
+    total_campagnes = campagnes_globales.count()
+
+    # ==============================================================================
+    # 2. VÉRIFICATION STRICTE DU RÔLE DE L'UTILISATEUR
+    # ==============================================================================
+    
+    # FILIÈRE A : UTILISATRICE SIMPLES (FATOU)
     if profil.role == "UTILISATRICE":
-        maintenant = timezone.now().date()
-        
-        # 1. ALGORITHME DES 30 JOURS (Issue #5)
         derniere_palpation = Autopalpation.objects.filter(utilisatrice=request.user).order_by('-date').first()
-        
-        if Cache_ou_Aucun_Examen := not derniere_palpation:
+        if not derniere_palpation:
             afficher_rappel_30_jours = True
         else:
             jours_ecoules = (maintenant - derniere_palpation.date).days
             if jours_ecoules >= 30:
                 afficher_rappel_30_jours = True
 
-        # 2. RAPPELS DES CAMPAGNES DE DÉPISTAGE À VENIR (F8)
-        # Étape A : On récupère toutes les campagnes valides sans couper la liste
-        campagnes_globales = Campagne.objects.filter(
-            validee=True,
-            date__gte=maintenant
-        ).order_by('date')
-        
-        # Étape B : On extrait le VRAI nombre total pour activer le "Voir plus"
-        total_campagnes = campagnes_globales.count()
-        
-        # Étape C : On limite l'affichage à maximum 2 cartes sur l'accueil
+        # On limite l'affichage à maximum 2 cartes sur l'accueil mobile (Page 8)
         campagnes_a_venir = campagnes_globales[:2]
-    elif profil.role == "FOURNISSEUR":
-        # 🛡️ CLOISONNEMENT STRICT : L'hôpital ne voit QUE les campagnes qu'il a lui-même envoyées
-        mes_campagnes_pro = Campagne.objects.filter(fournisseur=request.user).order_by('-date')
+        
+        context = {
+            'profil': profil,
+            'afficher_rappel_30_jours': afficher_rappel_30_jours,
+            'campagnes_a_venir': campaigns_a_venir if 'campaigns_a_venir' in locals() else campagnes_a_venir,
+            'total_campagnes': total_campagnes,
+        }
+        # 💥 AIGUILLAGE SÉCURISÉ : On renvoie EXCLUSIVEMENT le gabarit de l'utilisatrice
+        return render(request, 'core/accueil.html', context)
 
-    context = {
-        'profil': profil,
-        'afficher_rappel_30_jours': afficher_rappel_30_jours,
-        'campagnes_a_venir': campagnes_a_venir,
-        'mes_campagnes_pro': mes_campagnes_pro, 
-        'total_campagnes': total_campagnes,# 👈 On envoie la liste au fichier HTML
-    }
-    return render(request, 'core/accueil.html', context)
-    
+    # FILIÈRE B : PROFESSIONNELS DE SANTÉ (FOURNISSEUR)
+    elif profil.role == "FOURNISSEUR":
+        # Historique privé de cet hôpital spécifique
+        mes_campagnes_pro = Campagne.objects.filter(fournisseur=request.user).order_by('-date')
+        # Fil d'actualité public pour consultation réciproque
+        toutes_campagnes_publiees = campagnes_globales
+
+        context = {
+            'profil': profil,
+            'mes_campagnes_pro': mes_campagnes_pro,
+            'toutes_campagnes_publiees': toutes_campagnes_publiees,
+            'total_campagnes': total_campagnes,
+        }
+        # 💥 AIGUILLAGE SÉCURISÉ : On renvoie EXCLUSIVEMENT le gabarit du fournisseur
+        return render(request, 'core/accueil_fournisseur.html', context)
+
+    # Cas de secours (ex: Admin ou profil sans rôle défini)
+    return render(request, 'core/accueil.html', {'profil': profil})
    
 # 3. F2 - Vue du Portail d'Information (Sensibilisation médicale) - Page 2 & 7
 @login_required

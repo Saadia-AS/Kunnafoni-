@@ -16,9 +16,19 @@
         <div class="entete conteneur">
             
             <!-- Logo cliquable pour retour universel à l'accueil (Ergonomie Page 2) -->
-            <div class="logo">
-                <a href="{% url 'accueil' %}">Kunnafoni</a>
-            </div>
+            <!-- 🌸 LOGO IMAGE + NOM : Alignés horizontalement et 100% autonomes hors-ligne -->
+             <div class="logo">
+                 <a href="{% url 'accueil' %}" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #FFFFFF;">
+        
+                    <!-- 📂 Appel de votre image locale sécurisée (Changez l'extension si c'est un .svg ou .jpg) -->
+                    <img src="{% static 'core/images/logo_octobre.jpg' %}" alt="Logo Kunnafoni" style="width: 32px; height: 32px; object-fit: contain; display: block;">
+        
+                    <!-- Le nom de votre application -->
+                    <span style="font-size: 24px; font-weight: bold;">Kunnafoni</span>
+        
+                 </a>
+             </div>
+
         <!-- Liens de navigation du modèle -->
             <nav class="nav">
                 {% if request.user.is_authenticated %}

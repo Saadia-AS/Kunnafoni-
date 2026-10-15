@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+
+{% block title %}Accueil - Kunnafoni{% endblock %}
+
+{% block content %}
+<div class="conteneur" style="margin-top: var(--m);">
+          <!-- Message de bienvenue personnalisé -->
+          <h2 style="margin-bottom: var(--xs);">Hello, {{ request.user.username }}</h2>
+          <p style="color: var(--discret); font-size: 16px; margin-top: 0; margin-bottom: var(--m);">
+              Profil : <strong>{{ request.user.profil.get_role_display }}</strong>
+              {% if request.user.profil.structure %}
+                 à {{ request.user.profil.structure }}
+              {% endif %}
+          </p>
+        
+        <div style="background: #F0F4F8; border-left: 4px solid var(--accent); padding: var(--s); margin-bottom: var(--m); border-radius: 0 var(--rayon) var(--rayon) 0;">
+            <p style="margin: 0; font-size: 16px; color: var(--texte);">
+                Espace professionnel réservé à la publication et au relais des campagnes de santé publique pour la lutte contre le <strong>cancer du sein</strong>.
+            </p>
+        </div>
+
+        <div class="cartes" style="width: 100%;">
+            
+            <!-- Outil de publication de campagne -->
+            <div class="carte" style="width: 100%;">
+                <h3 style="margin-top: 0; color: var(--bleu-nuit);"> Campagnes de Dépistage</h3>
+                <p style="font-size: 16px; color: var(--texte); margin-bottom: var(--s);">Publiez une nouvelle campagne de dépistage gratuit en joignant votre communiqué officiel signé (PDF/Image).</p>
+                <a href="{% url 'publier_campagne' %}" class="btn-principal" style="display: block; width: 100%;">
+                    Publier un communiqué
+                </a>
+            </div>
+
+        </div>
+
+        <!-- 📊 TABLEAU DE BORD HÔPITAL : SUIVI DES DÉPÔTS EN LIGNE AVEC BORDURES -->
+        <div class="carte" style="margin-top: var(--m); width: 100%;">
+            <h3 style="margin-top: 0; color: var(--bleu-nuit);"> Suivi de vos communiqués transmis</h3>
+            
+            <div style="display: grid; gap: var(--s); margin-top: var(--s);">
+                {% for c in mes_campagnes_pro %}
+                    <div style="border: 1px solid var(--bordure); border-left: 4px solid {% if c.validee %}#28A745{% else %}#FFC107{% endif %}; padding: var(--s); background: var(--fond); border-radius: var(--rayon);">
+                        <span style="font-size: 13px; color: var(--discret); font-weight: bold;"> Événement prévu le : {{ c.date|date:"d F Y" }} à {{ c.heure|time:"H:i" }}</span>
+                        <p style="margin: 4px 0; font-size: 16px;">Structure : <strong>{{ c.structure }}</strong> | Lieu : {{ c.lieu }}</p>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--xs); border-top: 1px solid #E2E8F0; padding-top: 4px;">
+                            <span style="font-size: 14px; font-weight: bold; color: {% if c.validee %}#28A745{% else %}#D35400{% endif %};">
+                                {% if c.validee %} Validée et Publiée{% else %} En attente de validation admin{% endif %}
+                            </span>
+                            <a href="{{ c.communique.url }}" target="_blank" style="color: var(--accent); font-size: 14px; font-weight: bold; text-decoration: none;"> Voir le document</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p style="color: var(--discret); font-size: 15px; font-style: italic; margin: 0;">Aucun communiqué officiel transmis pour le moment.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- 📊 COMPOSANT FOURNISSEUR : CARTE DE REDIRECTION VERS TOUTES LES CAMPAGNES -->
+        <div class="carte" style="display: flex; flex-direction: column; justify-content: space-between; width: 100%;">
+            <div>
+                <h3 style="margin-top: 0; color: var(--bleu-nuit);"> Registre des Dépistages</h3>
+                <p style="font-size: 16px; color: var(--texte); margin-bottom: var(--s);">
+                    Consultez l'ensemble des sessions gratuites et des communiqués officiels publiés par d'autres structures.
+                </p>
+            </div>
+            
+            <!-- 🔗 LIGNE DE REDIRECTION EXACTE : Redirige vers la page d'archive commune -->
+            <a href="{% url 'toutes_campagnes' %}" class="btn-principal" style="margin-top: auto; display: block; text-align: center; width: 100%;">
+                Consulter toutes les campagnes
+            </a>
+        </div>
+</div>
+{% endblock %} 
