@@ -1,4 +1,3 @@
-<!-- core/templates/core/base.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
@@ -6,47 +5,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Kunnafoni{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
+    
+    <!-- 🛡️ Liaison CSS impérative et sécurisée avec l'attribut rel="stylesheet" -->
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/base.css' %}">
 </head>
 <body>
-    <div class="conteneur">
-        <header>
-            <nav style="display: flex; justify-content: space-between; align-items: center;">
-                <a href="{% url 'accueil' %}" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 20px;">
-                    Kunnafoni
-                </a>
-                
-                <div>
-                    {% if request.user.is_authenticated %}
-                        <!-- Menu visible uniquement si connecté (Page 2) -->
-                        <a href="{% url 'infos' %}" style="color: var(--texte); text-decoration: none; margin-right: var(--s); font-size: 16px;">🔍 Infos</a>
-                        <a href="{% url 'carnet_liste' %}" style="color: var(--texte); text-decoration: none; margin-right: var(--s); font-size: 16px;">📅 Carnet</a>
-                        <!-- Bouton Déconnexion discret mais accessible -->
-                        <form method="post" action="{% url 'deconnexion' %}" style="display: inline; margin: 0; padding: 0;">
-                             {% csrf_token %}
-                             <button type="submit" style="background: none; border: none; color: var(--attention); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; font-family: inherit;">
-                                   ❌ Quitter
-                             </button>
-                        </form>
-                    {% else %}
-                        <!-- Liens visibles si visiteur anonyme -->
-                        <a href="{% url 'connexion' %}" style="color: var(--accent); text-decoration: none; font-size: 16px;">Connexion</a>
-                    {% endif %}
-                </div>
-            </nav>
-        </header>
 
-        <main>
-            {% block content %}
+    <!-- 🌐 EN-TÊTE : Style bleu nuit en ligne issu de votre modèle CSS -->
+    <header class="site-header">
+        <div class="entete conteneur">
             
-            {% endblock %}
-        </main>
+            <!-- Logo cliquable pour retour universel à l'accueil (Ergonomie Page 2) -->
+            <div class="logo">
+                <a href="{% url 'accueil' %}">Kunnafoni</a>
+            </div>
+        <!-- Liens de navigation du modèle -->
+            <nav class="nav">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'infos' %}"> Infos</a>
+                    <a href="{% url 'carnet_liste' %}">Carnet</a>
+                    
+                    <!-- Bouton Quitter sécurisé Django 5+ (Requête POST obligatoire) -->
+                    <form method="post" action="{% url 'deconnexion' %}" style="display: inline; margin: 0; padding: 0;">
+                        {% csrf_token %} 
+                        <button type="submit" style="background: none; border: none; color: #f4f4f5; font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; margin-left: 20px; font-family: inherit;">
+                            Déconnexion
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'connexion' %}">Connexion</a>
+                {% endif %}
+            </nav>
+            
+        </div>
+    </header>
 
-        <footer>
-            <p style="color: var(--discret); font-size: 14px; text-align: center; margin-top: var(--l);">
-                &copy; 2026 Kunnafoni - Projet de fin de stage
-            </p>
-        </footer>
-    </div>
+    <!-- 📱 ZONE DE CONTENU PRINCIPAL (Limitation stricte responsive mobile) -->
+    <main class="conteneur">
+        
+        <!-- Affichage des messages flash de succès ou d'alertes médicales fixes -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alerte-medicale" style="background-color: #FFF9F9; margin-bottom: var(--s);">
+                    <p style="margin: 0; font-size: 16px; color: var(--texte);">{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        <!-- Le contenu des pages enfants (accueil, carnet, infos) s'injecte ici -->
+        {% endblock %}
+        
+    </main>
+
+    <!-- 👣 PIED DE PAGE : Centré, sobre et mature (Exigence Page 8) -->
+    <footer class="site-footer conteneur" style="padding: var(--s) 0; margin-top: var(--l); border-top: 1px solid var(--bordure);">
+        <p style="color: var(--discret); font-size: 14px; margin: 0 auto; text-align: center;">
+            &copy; 2026 Kunnafoni — Plateforme locale autonome de sensibilisation santé.
+        </p>
+    </footer>
+
 </body>
 </html>

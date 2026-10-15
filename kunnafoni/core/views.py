@@ -12,6 +12,9 @@ from django.utils import timezone
 from datetime import timedelta
 from collections import OrderedDict
 from .forms import CampagneForm
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
 
 
 """ Vue d'Inscription (Création synchronisée Compte + Profil)"""
@@ -38,6 +41,11 @@ def inscription(request):
     else:
         form = InscriptionForm()
     return render(request, 'core/inscription.html', {'form': form})
+@csrf_exempt
+def deconnexion(request):
+    """Déconnecte l'utilisateur et détruit la session en toute sécurité"""
+    logout(request)
+    return redirect('connexion')
 
 # MODIFICATION ICI : Sécurisation de la vue accueil pour le compte Superutilisateur
 @login_required
@@ -58,21 +66,24 @@ def accueil(request):
         derniere_palpation = Autopalpation.objects.filter(utilisatrice=request.user).order_by('-date').first()
         
         if Cache_ou_Aucun_Examen := not derniere_palpation:
-            # Si aucun examen n'est enregistré -> On affiche l'alerte d'invitation (Page 3)
             afficher_rappel_30_jours = True
         else:
-            # Si le délai depuis le dernier examen dépasse 30 jours -> On déclenche l'alerte
             jours_ecoules = (maintenant - derniere_palpation.date).days
             if jours_ecoules >= 30:
                 afficher_rappel_30_jours = True
 
-        # 2. RAPPELS DES CAMPAGNES DE DÉPISTAGE À VENIR (Page 3)
-        # On récupère les campagnes validées par l'admin dont la date est aujourd'hui ou dans le futur
-        campagnes_a_venir = Campagne.objects.filter(
+        # 2. RAPPELS DES CAMPAGNES DE DÉPISTAGE À VENIR (F8)
+        # Étape A : On récupère toutes les campagnes valides sans couper la liste
+        campagnes_globales = Campagne.objects.filter(
             validee=True,
             date__gte=maintenant
-        ).order_by('date')[:3] # On limite aux 3 prochaines campagnes pour ne pas surcharger l'écran mobile
-
+        ).order_by('date')
+        
+        # Étape B : On extrait le VRAI nombre total pour activer le "Voir plus"
+        total_campagnes = campagnes_globales.count()
+        
+        # Étape C : On limite l'affichage à maximum 2 cartes sur l'accueil
+        campagnes_a_venir = campagnes_globales[:2]
     elif profil.role == "FOURNISSEUR":
         # 🛡️ CLOISONNEMENT STRICT : L'hôpital ne voit QUE les campagnes qu'il a lui-même envoyées
         mes_campagnes_pro = Campagne.objects.filter(fournisseur=request.user).order_by('-date')
@@ -81,7 +92,8 @@ def accueil(request):
         'profil': profil,
         'afficher_rappel_30_jours': afficher_rappel_30_jours,
         'campagnes_a_venir': campagnes_a_venir,
-        'mes_campagnes_pro': mes_campagnes_pro, # 👈 On envoie la liste au fichier HTML
+        'mes_campagnes_pro': mes_campagnes_pro, 
+        'total_campagnes': total_campagnes,# 👈 On envoie la liste au fichier HTML
     }
     return render(request, 'core/accueil.html', context)
     
@@ -229,3 +241,18 @@ def carnet_evolution(request):
         'anomalies': anomalies,
     }
     return render(request, 'core/evolution.html', context)
+# core/views.py
+@login_required
+def galerie_symptomes(request):
+    """Affiche la galerie d'images d'illustration des symptômes"""
+    return render(request, 'core/galerie_symptomes.html')
+# 💥 NOUVELLE VUE : L'archive complète de toutes les campagnes pour l'utilisatrice
+@login_required
+def toutes_les_campagnes(request):
+    maintenant = timezone.now().date()
+    campagnes = Campagne.objects.filter(validee=True, date__gte=maintenant).order_by('date')
+    return render(request, 'core/toutes_campagnes.html', {'campagnes': campagnes})
+@login_required
+def guide_autopalpation(request):
+    """Affiche les schémas techniques des gestes de l'autopalpation"""
+    return render(request, 'core/guide_autopalpation.html')

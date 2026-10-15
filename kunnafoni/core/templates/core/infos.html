@@ -10,7 +10,7 @@
 
     <!-- ⚠️ AVERTISSEMENT MÉDICAL OBLIGATOIRE ET NON NÉGOCIABLE (Page 2) -->
     <div class="alerte-medicale">
-        <strong style="color: var(--attention);">⚠️ Avertissement important :</strong>
+        <strong style="color: var(--attention);"> Avertissement important :</strong>
         <p style="margin: var(--xs) 0 0 0; font-size: 17px;">
             Cette application ne remplace pas un avis médical. En cas de doute, de douleur ou de découverte d'une anomalie, il est indispensable de consulter rapidement un professionnel de santé.
         </p>
@@ -42,6 +42,14 @@
         {% empty %}
             <p style="color: var(--discret);">Aucun article dans cette rubrique pour le moment.</p>
         {% endfor %}
+        <div style="margin-top: var(--s); padding: var(--s); background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--rayon); box-shadow: var(--ombre);">
+             <p style="margin: 0; font-size: 16px; color: var(--texte); font-weight: bold;">
+                Souhaitez-vous voir des images d'illustration pour ces symptômes ?
+             </p>
+             <a href="{% url 'galerie_symptomes' %}" class="btn-principal" style="margin-top: var(--xs); display: inline-block; padding: var(--xs) var(--s); font-size: 14px;">
+                 Consulter les illustrations
+             </a>
+        </div>
     </section>
 
     <!-- Rubrique Importance Dépistage -->
