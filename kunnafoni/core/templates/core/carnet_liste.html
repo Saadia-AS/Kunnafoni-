@@ -3,6 +3,7 @@
 {% block title %}Mon Carnet - Kunnafoni{% endblock %}
 
 {% block content %}
+
 <div style="margin-top: var(--m);">
     <a href="{% url 'accueil' %}" style="color: var(--accent); font-size: 16px;">&larr; Retour à l'accueil</a>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--m);">
@@ -16,6 +17,31 @@
              </a>
         </div>
     </div>
+<!-- 💡 BLOC PEDAGOGIQUE : Ajouté précisément sur la liste de l'historique -->
+<div style="background: var(--surface); border: 1px solid var(--bordure); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre); margin-bottom: var(--m); display: flex; align-items: flex-start; gap: var(--xs); width: 100%;">
+    
+    <!-- Icône d'aide visuelle -->
+    <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+
+    <div>
+        <h4 style="margin: 0 0 4px 0; color: var(--bleu-nuit); font-size: 16px;">
+            Besoin d'aide pour réaliser votre examen ?
+        </h4>
+        <p style="margin: 0 0 var(--s) 0; font-size: 15px; color: var(--texte);">
+            Souhaitez-vous comprendre comment se fait l'autopalpation et visualiser le guide complet avant d'ajouter ou de consulter vos données ?
+        </p>
+        
+        <!-- 🔗 Lien direct vers votre grande infographie unique -->
+        <a href="/carnet/guide-gestes/?v=1.2" class="btn-principal" style="display: inline-block; padding: 8px 16px; font-size: 14px; margin-top: 0; background-color: transparent; color: var(--accent); border: 1px solid var(--accent); text-decoration: none;">
+            Oui, voir le guide complet 
+        </a>
+    </div>
+
+</div>
 
     <!-- Affichage des messages d'alertes fixes si anomalie signalée (Page 2 et 6) -->
     {% if messages %}
