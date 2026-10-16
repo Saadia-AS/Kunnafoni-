@@ -1,0 +1,94 @@
+<!-- core/templates/core/chatbot.html -->
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Assistant Virtuel - Kunnafoni{% endblock %}
+
+{% block content %}
+<div style="margin-top: var(--m); max-width: 600px; margin-left: auto; margin-right: auto;">
+    <a href="{% url 'accueil' %}" style="color: var(--accent); font-size: 16px; text-decoration: none;">&larr; Retour au tableau de bord</a>
+    
+    <h2 style="color: var(--bleu-nuit); margin-top: var(--s); margin-bottom: var(--s);">💬 Assistant Kunnafoni</h2>
+    
+    <!-- Zone de discussion (Chatbox) -->
+    <div style="background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--rayon); box-shadow: var(--ombre); overflow: hidden; display: flex; flex-direction: column; height: 450px;">
+        
+        <!-- En-tête du Chatbot -->
+        <div style="background: var(--bleu-nuit); color: #FFFFFF; padding: var(--s); display: flex; align-items: center; gap: var(--xs);">
+            <div style="width: 10px; height: 10px; background: #28A745; border-radius: 50%;"></div>
+            <strong>Conseiller Prévention Hors-ligne </strong>
+        </div>
+
+        <!-- Zone des messages de discussion -->
+        <div id="chat-zone" style="flex: 1; padding: var(--s); overflow-y: auto; background: var(--fond); display: flex; flex-direction: column; gap: var(--s);">
+            <!-- Message de bienvenue automatique -->
+            <div style="align-self: flex-start; background: #FFFFFF; border: 1px solid var(--bordure); padding: var(--xs) var(--s); border-radius: 0 var(--rayon) var(--rayon) var(--rayon); max-width: 85%; font-size: 15px; color: var(--texte);">
+                Bonjour ! Je suis votre assistant virtuel Kunnafoni. Je fonctionne localement sans internet pour répondre à vos questions sur le cancer du sein et l'autopalpation. Que souhaitez-vous savoir ?
+            </div>
+        </div>
+
+        <!-- Zone d'écriture et d'envoi -->
+        <div style="padding: var(--s); background: #FFFFFF; border-top: 1px solid var(--bordure); display: flex; gap: var(--xs);">
+            <input type="text" id="user-input" placeholder="Posez votre question ici (ex: palpation, symptômes)..." style="flex: 1; padding: var(--xs); border: 1px solid var(--bordure); border-radius: var(--rayon); font-size: 15px; outline: none;">
+            <button onclick="envoyerMessage()" class="btn-principal" style="margin: 0; padding: var(--xs) var(--s); font-size: 15px; cursor: pointer;">Envoyer</button>
+        </div>
+    </div>
+</div>
+
+<!-- 🧠 LOGIQUE DU CHATBOT LOCAL AUTONOME (JAVASCRIPT) -->
+<script>
+// Base de données médicale locale (Dictionnaire de mots-clés OMS / INCa)
+const reponsesLocales = {
+    "palpation": "L'autopalpation doit être réalisée chaque mois, idéalement une semaine après la fin des règles. Utilisez la pulpe de vos 3 doigts du milieu pour examiner chaque sein de manière circulaire [OMS].",
+    "geste": "Pour faire l'autopalpation, observez d'abord vos seins devant un miroir (bras le long du corps puis levés), puis palpez fermement de l'extérieur vers l'intérieur de manière circulaire [OMS].",
+    "symptome": "Les signes d'alerte majeurs incluent : la présence d'une masse ou boule au toucher, une modification de l'aspect de la peau (peau d'orange), une rougeur persistante ou une rétraction du mamelon [INCa].",
+    "boule": "Si vous découvrez une boule ou un durcissement anormal lors de votre examen, pas de panique, mais enregistrez-le dans votre carnet et consultez un médecin pour un diagnostic fiable [OMS].",
+    "depistage": "Le dépistage clinique annuel par un professionnel de santé est recommandé dès 25 ans. Kunnafoni affiche les campagnes de dépistage gratuit organisées près de chez vous dans l'onglet dédié [OMS].",
+    "bonjour": "Bonjour ! Je suis ravi de vous aider. Posez-moi une question sur l'autopalpation, les symptômes ou le dépistage.",
+    "merci": "Je vous en prie ! Prenez soin de votre santé physique et n'oubliez pas d'enregistrer votre examen mensuel dans votre carnet."
+};
+
+function envoyerMessage() {
+    const inputField = document.getElementById('user-input');
+    const userText = inputField.value.trim();
+    if (userText === "") return;
+
+    const chatZone = document.getElementById('chat-zone');
+
+    // 1. Afficher le message de l'utilisatrice
+    const userDiv = document.createElement('div');
+    userDiv.style = "align-self: flex-end; background: var(--accent); color: #FFFFFF; padding: 8px 12px; border-radius: var(--rayon) 0 var(--rayon) var(--rayon); max-width: 85%; font-size: 15px;";
+    userDiv.innerText = userText;
+    chatZone.appendChild(userDiv);
+
+    inputField.value = ""; // Vider le champ d'écriture
+    chatZone.scrollTop = chatZone.scrollHeight; // Défiler vers le bas
+
+    // 2. Analyser le texte et générer la réponse médicale locale (Calcul du Bot)
+    setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.style = "align-self: flex-start; background: #FFFFFF; border: 1px solid var(--bordure); padding: 8px 12px; border-radius: 0 var(--rayon) var(--rayon) var(--rayon); max-width: 85%; font-size: 15px; color: var(--texte);";
+        
+        // Algorithme de recherche par mot-clé (minuscules)
+        const texteNettoye = userText.toLowerCase();
+        let reponseTrouvee = "Désolé, je n'ai pas bien compris votre question. Essayez avec des mots simples comme 'palpation', 'symptômes', 'boule' ou 'dépistage' [OMS].";
+
+        for (const [cle, valeur] of Object.entries(reponsesLocales)) {
+            if (texteNettoye.includes(cle)) {
+                reponseTrouvee = valeur;
+                break;
+            }
+        }
+
+        botDiv.innerHTML = reponseTrouvee;
+        chatZone.appendChild(botDiv);
+        chatZone.scrollTop = chatZone.scrollHeight;
+    }, 400); // Petit délai pour simuler une réflexion humaine naturelle
+}
+
+// Permettre l'envoi du message en appuyant sur la touche "Entrée" du clavier
+document.getElementById('user-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') envoyerMessage();
+});
+</script>
+{% endblock %}

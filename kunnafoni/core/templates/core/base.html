@@ -28,27 +28,95 @@
         
                  </a>
              </div>
-
-        <!-- Liens de navigation du modèle -->
-            <nav class="nav">
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'infos' %}"> Infos</a>
-                    <a href="{% url 'carnet_liste' %}">Carnet</a>
-                    
-                    <!-- Bouton Quitter sécurisé Django 5+ (Requête POST obligatoire) -->
-                    <form method="post" action="{% url 'deconnexion' %}" style="display: inline; margin: 0; padding: 0;">
-                        {% csrf_token %} 
-                        <button type="submit" style="background: none; border: none; color: #f4f4f5; font-size: 16px; font-weight: bold; cursor: pointer; padding: 0; margin-left: 20px; font-family: inherit;">
-                            Déconnexion
-                        </button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'connexion' %}">Connexion</a>
-                {% endif %}
-            </nav>
-            
         </div>
-    </header>
+        <!-- 🍔 MENU DÉROULANT INTERACTIF AVEC ARRIÈRE-PLAN FLOUTÉ -->
+        <nav style="position: relative; display: inline-block;">
+    
+            <!-- Le bouton déclencheur du menu -->
+            <button id="menuBtn" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #FFFFFF; padding: 8px 16px; border-radius: var(--rayon); font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; transition: background 0.2s; position: relative; z-index: 1001;">
+                ☰ Menu de mon espace
+            </button>
+
+            <!-- 🌫️ LE CALQUE DE FLOUTAGE (Caché par défaut) -->
+            <!-- Ce calque recouvre tout l'écran sous le menu et floute le contenu en arrière-plan -->
+            <div id="menuOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 1000; animation: fadeInOverlay 0.2s ease;box-sizing: border-box;"></div>
+
+            <!-- 📂 Le contenu déroulant (Caché par défaut) -->
+            <!-- 📂 Le contenu déroulant corrigé : Ne dépasse jamais de l'écran -->
+            <!-- 📂 CONTENU DÉROULANT VERROUILLÉ À DROITE -->
+            <div id="dropdownContent" style="display: none; position: absolute !important; right: 0 !important; left: auto !important; top: 100%; background-color: var(--surface); width: 220px; max-width: 80vw; max-height: 70vh; overflow-y: auto; border: 1px solid var(--bordure); border-radius: var(--rayon); box-shadow: var(--ombre); z-index: 1001; animation: fadeInMenu 0.2s ease; box-sizing: border-box;">
+
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'infos' %}" style="color: var(--bleu-nuit); padding: 14px 16px; text-decoration: none; display: block; font-size: 15px; border-bottom: 1px solid var(--fond); transition: background 0.2s;">
+                        Portail d'informations
+                    </a>
+            
+                    <a href="{% url 'carnet_liste' %}" style="color: var(--bleu-nuit); padding: 14px 16px; text-decoration: none; display: block; font-size: 15px; border-bottom: 1px solid var(--fond); transition: background 0.2s;">
+                         Mon Carnet de suivi
+                    </a>
+            
+                    <a href="{% url 'chatbot' %}" style="color: var(--bleu-nuit); padding: 14px 16px; text-decoration: none; display: block; font-size: 15px; border-bottom: 1px solid var(--fond); transition: background 0.2s;">
+                         Assistant Virtuel
+                    </a>
+
+                    <a href="/deconnexion/" style="color: #D35400; padding: 14px 16px; text-decoration: none; display: block; font-size: 15px; font-weight: bold; background-color: #FFF5F5; transition: background 0.2s;">
+                         Déconnexion
+                    </a>
+                {% else %}
+                    <a href="{% url 'connexion' %}" style="color: var(--bleu-nuit); padding: 14px 16px; text-decoration: none; display: block; font-size: 15px;">
+                        Connexion
+                    </a>
+                {% endif %}
+           </div>
+       </nav>
+
+       <!-- 🧠 LOGIQUE JAVASCRIPT CORRIGÉE AVEC LE GESTIONNAIRE DE CALQUE -->
+       <script>
+             const menuBtn = document.getElementById('menuBtn');
+             const dropdownContent = document.getElementById('dropdownContent');
+             const menuOverlay = document.getElementById('menuOverlay');
+
+             function ouvrirMenu() {
+                dropdownContent.style.display = 'block';
+                menuOverlay.style.display = 'block';
+                menuBtn.style.background = 'rgba(255, 255, 255, 0.3)';
+             }
+
+             function fermerMenu() {
+                dropdownContent.style.display = 'none';
+                menuOverlay.style.display = 'none';
+                menuBtn.style.background = 'rgba(255, 255, 255, 0.15)';
+             }
+
+             // Basculer l'affichage au clic sur le bouton
+             menuBtn.addEventListener('click', function(e) {
+                 e.stopPropagation();
+                 if (dropdownContent.style.display === 'none' || dropdownContent.style.display === '') {
+                    ouvrirMenu();
+                 } else {
+                    fermerMenu();
+                 }
+             });
+
+             // Fermer le menu si on clique sur le calque de floutage
+             menuOverlay.addEventListener('click', fermerMenu);
+       </script>
+
+        <!-- ✨ Animations de transition fluides -->
+        <style>
+            @keyframes fadeInOverlay {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes fadeInMenu {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            #dropdownContent a:hover {
+                background-color: var(--fond);
+            }
+       </style>
+   </header>
 
     <!-- 📱 ZONE DE CONTENU PRINCIPAL (Limitation stricte responsive mobile) -->
     <main class="conteneur">
@@ -71,7 +139,7 @@
     <!-- 👣 PIED DE PAGE : Centré, sobre et mature (Exigence Page 8) -->
     <footer class="site-footer conteneur" style="padding: var(--s) 0; margin-top: var(--l); border-top: 1px solid var(--bordure);">
         <p style="color: var(--discret); font-size: 14px; margin: 0 auto; text-align: center;">
-            &copy; 2026 Kunnafoni — Plateforme locale autonome de sensibilisation santé.
+            &copy; 2026 Kunnafoni — Plateforme locale de sensibilisation santé.
         </p>
     </footer>
 

@@ -6,8 +6,10 @@
 <div style="margin-top: var(--m);">
     <h2>Se connecter</h2>
 
-    <form method="post" style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
+    <!-- 🔗 FORMULAIRE SÉCURISÉ : On ajoute l'action de redirection vers la vue de connexion -->
+    <form method="post" action="{% url 'connexion' %}" style="background: var(--surface); padding: var(--s); border-radius: var(--rayon); box-shadow: var(--ombre);">
         {% csrf_token %}
+
         
         {% if form.errors %}
             <p style="color: var(--attention); font-weight: bold;">Identifiants incorrects. Veuillez réessayer.</p>
