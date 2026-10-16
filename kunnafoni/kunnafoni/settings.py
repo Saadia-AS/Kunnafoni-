@@ -129,3 +129,4 @@ MAILERS = {
 
 # kunnafoni/settings.py (Tout en bas)
 LOGIN_URL = 'connexion'
+LOGIN_REDIRECT_URL = 'accueil'

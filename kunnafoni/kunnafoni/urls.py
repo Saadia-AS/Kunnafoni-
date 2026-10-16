@@ -34,7 +34,8 @@ urlpatterns = [
     # 4. Route test de sécurité fournisseur (Critère d'acceptation F1)
     path('fournisseur/campagnes/publier/', views.publier_campagne_template, name='publier_campagne'),
     path('portail-informations/campagnes/toutes/', views.toutes_les_campagnes, name='toutes_campagnes'),
-
+    path('assistant-sante/', views.chatbot_assistant, name='chatbot'),
+    path('campagne/supprimer/<int:pk>/', views.supprimer_campagne, name='supprimer_campagne'),
 ]
 
 # 5. Gestion des fichiers médias en local

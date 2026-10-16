@@ -274,3 +274,21 @@ def toutes_les_campagnes(request):
 def guide_autopalpation(request):
     """Affiche les schémas techniques des gestes de l'autopalpation"""
     return render(request, 'core/guide_autopalpation.html')
+@login_required
+def chatbot_assistant(request):
+    """Affiche l'interface de l'assistant de santé virtuel autonome"""
+    return render(request, 'core/chatbot.html')
+@login_required
+def supprimer_campagne(request, pk):
+    """Permet à un fournisseur de supprimer sa propre campagne avant ou après validation"""
+    # On récupère la campagne ou on renvoie une erreur 404 si elle n'existe pas
+    campagne = get_object_or_404(Campagne, pk=pk)
+    
+    # SÉCURITÉ ABSOLUE : On vérifie que l'utilisateur connecté est bien l'auteur
+    if campagne.fournisseur == request.user:
+        campagne.delete()
+        messages.success(request, "Le communiqué officiel a été supprimé avec succès.")
+    else:
+        messages.error(request, "Action non autorisée. Vous ne pouvez pas supprimer ce document.")
+        
+    return redirect('accueil') 

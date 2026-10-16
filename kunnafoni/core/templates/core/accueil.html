@@ -14,7 +14,10 @@
                 à {{ request.user.profil.structure }}
             {% endif %}
         </p>
-        
+        <!-- 🖼️ BANNIÈRE LARGE ET COMPACTE : 100% Autonome et responsive -->
+        <div style="width: 100%; max-height: 250px; border-radius: var(--rayon); border: 1px solid var(--bordure); box-shadow: var(--ombre); margin-bottom: var(--m); overflow: hidden; box-sizing: border-box; background-color: var(--surface);">
+            <img src="{% static 'core/images/image_rose.jpeg' %}" alt="Bannière d'accueil Kunnafoni" style="width: 100%; height: 250px; object-fit: cover; display: block; object-position: center;">
+        </div>
         <!-- 🎀 BANDEAU TOTALEMENT RESPONSIVE : Le logo ne rétrécit jamais -->
         <div style="background: linear-gradient(135deg, #FCE4EC, #F8BBD0); border: 1px solid #F8BBD0; padding: var(--s); border-radius: var(--rayon); margin-bottom: var(--m); box-shadow: var(--ombre); width: 100%; box-sizing: border-box; display: grid; grid-template-columns: 65px 1fr; gap: var(--s); align-items: center;">
     
@@ -99,25 +102,5 @@
                  </p>
              </div>
         </div>
-
-        <!-- 📊 LES BLOCS DE NAVIGATION ALIGNÉS EN LIGNE AVEC BORDURES FINES -->
-        <div class="cartes" style="position: relative; display: flex; flex-direction: row; justify-content: space-between;stretch: 100%;">
-            
-            <!-- Carte Portail d'Information -->
-            <div class="carte" style="padding: 10px; width: 100%; gap: 20px;">
-                <h3 style="margin-top: 0; color: var(--bleu-nuit);"> S'informer</h3>
-                <p style="font-size: 16px; color: var(--texte); margin-bottom: var(--s);">Consultez les méthodes préventives officielles et les signes d'alerte validés par les autorités de santé.</p>
-                <a href="{% url 'infos' %}" class="btn-principal" style="display: block; width: 100%; text-align: center;">Accéder au portail</a>
-            </div>
-
-            <!-- Carte Carnet de Suivi Intime -->
-            <div class="carte" style="margin-left: 0; padding: 10px; width: 100%; gap: 20px;">
-                <h3 style="margin-top: 0; color: var(--bleu-nuit);"> Carnet de Palpation</h3>
-                <p style="font-size: 16px; color: var(--texte); margin-bottom: var(--s);">Enregistrez vos observations mensuelles et suivez la régularité de vos examens en toute confidentialité.</p>
-                <a href="{% url 'carnet_liste' %}" class="btn-principal" style="display: block; width: 100%; text-align: center;">Mon carnet de suivi</a>
-            </div>
-
-        </div>
-
 </div>
 {% endblock %}
